@@ -1,0 +1,24 @@
+.search-sale-grid {
+  display: grid;
+  grid-template-areas:
+    "type type make make"
+    "model model price price"
+    "distance zip submit submit";
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: 1rem;
+}
+
+.search-sale-grid-mobile {
+  display: grid;
+  grid-template-areas:
+    "type type"
+    "make make"
+    "model model"
+    "price price"
+    "distance zip"
+    "submit submit";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, auto);
+  gap: 1rem;
+}
