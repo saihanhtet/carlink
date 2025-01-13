@@ -1,5 +1,5 @@
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 import {
     Card,
@@ -35,14 +35,18 @@ export function BarChartCustom({
             </CardHeader>
             <CardContent className={"poppins"}>
                 <ChartContainer config={config}>
-                    <BarChart
-                        accessibilityLayer
-                        data={data}
-                        layout={orientation === "horizontal" ? "vertical" : "horizontal"}
-                        margin={orientation === "vertical" ? {} : { left: -20 }}
-                    >
-                        {orientation === 'horizontal' ?
-                            (
+                    {/* Use ResponsiveContainer to make the chart fill the available space */}
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                            accessibilityLayer
+                            data={data}
+                            layout={orientation === "horizontal" ? "vertical" : "horizontal"}
+                            margin={{
+                                top: 50,
+                                bottom: 0,
+                            }}
+                        >
+                            {orientation === 'horizontal' ? (
                                 <>
                                     <XAxis type="number" dataKey={xKey} hide />
                                     <YAxis
@@ -54,8 +58,7 @@ export function BarChartCustom({
                                         tickFormatter={(value) => value.slice(0, 3)}
                                     />
                                 </>
-                            )
-                            : (
+                            ) : (
                                 <>
                                     <CartesianGrid vertical={false} />
                                     <XAxis
@@ -68,19 +71,20 @@ export function BarChartCustom({
                                 </>
                             )}
 
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        {Object.keys(config).map((key) => (
-                            <Bar
-                                key={key}
-                                dataKey={key}
-                                fill={config[key].color}
-                                radius={orientation === "vertical" ? 8 : 5}
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
                             />
-                        ))}
-                    </BarChart>
+                            {Object.keys(config).map((key) => (
+                                <Bar
+                                    key={key}
+                                    dataKey={key}
+                                    fill={config[key].color}
+                                    radius={orientation === "vertical" ? 8 : 5}
+                                />
+                            ))}
+                        </BarChart>
+                    </ResponsiveContainer>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">

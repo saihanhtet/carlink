@@ -17,10 +17,10 @@ const ContactUs = ({ canLogin, canRegister, isLoggedIn }) => {
 
           {/* Form Section */}
           <div className="md:w-1/2 p-8">
-            <h2 className="text-3xl font-bold mb-6 text-blue-400 rubik">
+            <h2 className="text-3xl font-bold mb-6 rubik">
               Get in Touch with Us
             </h2>
-            <p className="text-sm text-white-600 mb-6">
+            <p className="text-sm text-white-600 mb-6 poppins">
               Have any questions, concerns, or feedback? We'd love to hear from you! Please feel free to drop us a message using the form below, and we'll get back to you as soon as possible. We're here to help with anything you need regarding our services, products, or general inquiries.
             </p>
 
@@ -60,12 +60,12 @@ const ContactUs = ({ canLogin, canRegister, isLoggedIn }) => {
               </div>
 
               {/* Additional Info Section */}
-              <div className="text-sm text-white-600">
+              <div className="text-sm text-white-600 poppins">
                 <p>
                   If you are reaching out for support, please provide as much detail as possible so we can assist you more efficiently. You can also contact us directly at{" "}
                   <a
                     href="mailto:support@usedcarsales.com"
-                    className="text-blue-400 underline"
+                    className=" underline"
                   >
                     support@usedcarsales.com
                   </a>{" "}
@@ -87,7 +87,7 @@ const ContactUs = ({ canLogin, canRegister, isLoggedIn }) => {
         </div>
         {/* contact information */}
         <section className="text-center mt-5 border border-muted rounded-lg shadow-lg overflow-hidden md:w-3/4 lg:w-2/3 poppins">
-          <p className="text-gray-300 leading-relaxed p-8">
+          <p className="leading-relaxed p-8">
             Have questions or need support? Reach out to us at{" "}
             <a href="mailto:support@usedcarsales.com" className="text-blue-500 underline">
               support@usedcarsales.com

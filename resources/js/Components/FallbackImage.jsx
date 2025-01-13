@@ -9,7 +9,7 @@ export const ImageWithFallback = ({ src, alt, className }) => {
     return (
         <>
             {isLoading && !hasError && (
-                <Skeleton className="w-full h-full min-h-[250px] rounded-md bg-gray-300" />
+                <Skeleton className="w-full h-full min-h-[250px] rounded-none bg-gray-300" />
             )}
             {!hasError && (
                 <img
@@ -24,7 +24,7 @@ export const ImageWithFallback = ({ src, alt, className }) => {
                 />
             )}
             {hasError && (
-                <Skeleton className="w-full h-full min-h-[250px] rounded-md bg-gray-300 flex items-center justify-center">
+                <Skeleton className="w-full h-full min-h-[250px] rounded-none bg-gray-300 flex items-center justify-center">
                     <span className="text-sm text-gray-500">Image not available</span>
                 </Skeleton>
             )}

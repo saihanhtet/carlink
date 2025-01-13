@@ -41,6 +41,8 @@ class CarController extends Controller
             'price_category' => 'nullable|in:Good Deal,Fair Deal,Overpriced',
             'status' => 'nullable|in:open,close',
             'image' => 'required|string',
+            'created_at' => 'nullable|datetime',
+            'updated_at' => 'nullable|datetime'
         ]);
 
         $car = Car::create(array_merge($request->all(), ['user_id' => auth()->id()]));

@@ -1,23 +1,20 @@
-import { BarChartCustom } from '@/components/chart/bar-chart';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { cn } from '@/lib/utils';
-import { Head, Link } from '@inertiajs/react';
-import React, { useState, useEffect } from 'react';
+import { BarChartCustom } from "@/components/chart/bar-chart";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { cn } from "@/lib/utils";
+import { Head, Link, usePage } from "@inertiajs/react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 const CardTemplate = ({ title, content, link, linkContent, className, ...props }) => {
     return (
         <Card
             {...props}
-            className={cn(
-                "shadow-md p-0 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-pink-500/30",
-                className
-            )}
+            className={cn("", className)}
         >
             <CardHeader className="py-4">
-                <CardTitle className="font-xl rubik capitalize">{title}</CardTitle>
+                <CardTitle className="font-lg font-semibold rubik capitalize">{title}</CardTitle>
             </CardHeader>
-            <CardContent className="text-inherit font-semibold text-xl font-mono text-right capitalize">
+            <CardContent className="font-semibold text-muted-foreground text-lg poppins text-right capitalize">
                 {content}
             </CardContent>
             <CardFooter className="flex justify-end items-center border-t-2 border-muted py-3">
@@ -34,43 +31,42 @@ const CardTemplate = ({ title, content, link, linkContent, className, ...props }
 
 const Analytics = () => {
     const breadcrumbs = [
-        { name: 'Dashboard', link: route('dashboard') },
-        { name: 'Analytics', link: route('dashboard') },
+        { name: "Dashboard", link: route("dashboard") },
+        { name: "Analytics", link: route("dashboard") },
     ];
 
-    // State for dynamic data fetching
-    const [chartData, setChartData] = useState([]);
-    const [trend, setTrend] = useState(0); // State to store the calculated trend percentage
+    const { monthly_bids, month_label, cars, total_profit, average_bidding } = usePage().props;
 
-    useEffect(() => {
-        // Simulate API call
-        const fetchData = async () => {
-            const data = [
-                { month: "January", bid: 186 },
-                { month: "February", bid: 305 },
-                { month: "March", bid: 237 },
-                { month: "April", bid: 73 },
-                { month: "May", bid: 209 },
-                { month: "June", bid: 214 },
-            ];
-            setChartData(data);
+    // Transform monthly_bids into chart data
+    const chartData = monthly_bids.map((bid) => ({
+        month: bid.month,
+        total: bid.total_amount,
+    }));
 
-            // Calculate the percentage trend
-            if (data.length > 1) {
-                const lastMonth = data[data.length - 1].bid;
-                const secondLastMonth = data[data.length - 2].bid;
-                const percentChange = ((lastMonth - secondLastMonth) / secondLastMonth) * 100;
-                setTrend(percentChange.toFixed(1)); // Round to one decimal place
-            }
-        };
+    // Calculate trend (percentage change between the last two months)
+    const calculateTrend = (data) => {
+        if (data.length < 2) return null; // Not enough data to calculate a trend
+        const lastMonth = data[data.length - 1].total;
+        const secondLastMonth = data[data.length - 2].total;
+        if (secondLastMonth === 0) return null; // Avoid division by zero
+        const percentChange = ((lastMonth - secondLastMonth) / secondLastMonth) * 100;
+        return percentChange.toFixed(1); // Round to one decimal place
+    };
 
-        fetchData();
-    }, []);
+    const trend = calculateTrend(chartData);
+
+    const trendText = trend
+        ? `Trending ${trend > 0 ? "up" : "down"} by ${Math.abs(trend)}%`
+        : "No trend data available";
+
+    const trendIcon = trend > 0
+        ? <TrendingUp className="h-4 w-4" />
+        : <TrendingDown className="h-4 w-4" />
 
     const chartConfig = {
-        bid: {
-            label: "Bid",
-            color: "hsl(var(--chart-3))",
+        total: {
+            label: "Total Bid Amount. ",
+            color: "hsl(var(--primary))",
         },
     };
 
@@ -79,19 +75,22 @@ const Analytics = () => {
             <Head title="Dashboard" />
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <CardTemplate title={'Current Sales'} content={'$5000'} link={'#'} linkContent={"Check out"} />
-                    <CardTemplate title={'Profit'} content={'$3000'} link={'#'} linkContent={"Check out"} />
-                    <CardTemplate title={'Active Cars'} content={'120'} link={'#'} linkContent={"Check out"} />
-                    <BarChartCustom
-                        className={'shadow-md p-0 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-pink-500/30'}
-                        data={chartData}
-                        config={chartConfig}
-                        title="Car Biddings per Month"
-                        description="January - June 2024"
-                        footerText="Number of car biddings for the last 6 months"
-                        trendText={`Trending ${trend > 0 ? 'up' : 'down'} by ${Math.abs(trend)}% this month`}
-                        orientation='vertical'
-                    />
+                    <CardTemplate title={"My Cars"} content={cars.length} link={"#"} linkContent={"Check out"} />
+                    <CardTemplate title={"Profits"} content={`$${total_profit.toFixed(2)}`} link={"#"} linkContent={"Check out"} />
+                    <CardTemplate title={"Avg. Bidding per Month"} content={`$${average_bidding.toFixed(2)}`} link={"#"} linkContent={"Check out"} />
+                    <div className="chart-container" style={{ overflowX: 'auto' }}>
+                        <BarChartCustom
+                            className="shadow-md p-0"
+                            data={chartData}
+                            config={chartConfig}
+                            title="Total Bid Amount per Month"
+                            description={month_label}
+                            footerText={`Total bid amounts aggregated by month.`}
+                            trendText={trendText}
+                            trendIcon={trendIcon}
+                            orientation="vertical"
+                        />
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>

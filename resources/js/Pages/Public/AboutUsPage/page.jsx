@@ -8,11 +8,11 @@ const AboutUs = ({ canLogin, canRegister, isLoggedIn }) => {
                     {/* Hero Section */}
                     <section className="mb-12">
                         <div className="text-center">
-                            <h1 className="text-4xl md:text-5xl font-bold text-white rubik mb-6">
+                            <h1 className="text-4xl md:text-5xl font-bold rubik mb-6">
                                 About Us
                             </h1>
-                            <p className="text-lg text-gray-300 leading-relaxed">
-                                Welcome to the <span className="text-blue-400 font-semibold">Used Cars Sales Portal</span>,
+                            <p className="text-lg leading-relaxed">
+                                Welcome to the <span className="font-semibold">Used Cars Sales Portal</span>,
                                 your trusted destination for buying and selling cars seamlessly.
                             </p>
                         </div>
@@ -21,19 +21,19 @@ const AboutUs = ({ canLogin, canRegister, isLoggedIn }) => {
                     {/* Why Choose Us Section */}
                     <section className="grid md:grid-cols-2 gap-12 items-center mb-12 place-items-center border p-3 rounded-sm">
                         <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold text-blue-400">Why Choose Us?</h2>
-                            <ul className="list-disc pl-5 text-gray-300 space-y-2">
+                            <h2 className="text-2xl font-semibold">Why Choose Us?</h2>
+                            <ul className="list-disc pl-5 space-y-2">
                                 <li>
-                                    <span className="font-semibold text-blue-400">Comprehensive Listings:</span> Explore a wide range of cars from trusted sellers.
+                                    <span className="font-semibold">Comprehensive Listings:</span> Explore a wide range of cars from trusted sellers.
                                 </li>
                                 <li>
-                                    <span className="font-semibold text-blue-400">User-Friendly Interface:</span> Our platform is intuitive and easy to use.
+                                    <span className="font-semibold">User-Friendly Interface:</span> Our platform is intuitive and easy to use.
                                 </li>
                                 <li>
-                                    <span className="font-semibold text-blue-400">Secure Transactions:</span> We prioritize your safety and data privacy.
+                                    <span className="font-semibold">Secure Transactions:</span> We prioritize your safety and data privacy.
                                 </li>
                                 <li>
-                                    <span className="font-semibold text-blue-400">Dedicated Support:</span> Our team is ready to assist you at every step.
+                                    <span className="font-semibold">Dedicated Support:</span> Our team is ready to assist you at every step.
                                 </li>
                             </ul>
                         </div>
@@ -56,8 +56,8 @@ const AboutUs = ({ canLogin, canRegister, isLoggedIn }) => {
                             />
                         </div>
                         <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold text-blue-400">Our Vision</h2>
-                            <p className="text-gray-300 leading-relaxed">
+                            <h2 className="text-2xl font-semibold">Our Vision</h2>
+                            <p className="leading-relaxed">
                                 To be the leading online platform for used car transactions by delivering exceptional service and building trust within the automotive community.
                             </p>
                         </div>

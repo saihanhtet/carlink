@@ -3,29 +3,30 @@ import React from "react";
 
 const CarCard = ({ car }) => {
     return (
-        <div className="w-full h-full mx-auto shadow-sm shadow-black rounded-lg flex flex-col md:flex-row relative overflow-hidden">
+        <div className="w-full h-full mx-auto shadow-md border border-gray-200 rounded-lg flex flex-col md:flex-row relative overflow-hidden">
             <div className="relative w-full h-full flex justify-center items-center max-w-[450px] max-h-[350px]  bg-gray-100">
                 <ImageWithFallback
                     src={car.image}
                     alt={car.model}
                     className="w-3/4 h-full object-contain"
                 />
-                <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-semibold px-2 py-1">
-                    Sponsored
+                <div className={`absolute top-0 left-0 text-xs font-semibold px-2 py-1 capitalize
+                ${car.status === 'open' ? 'bg-yellow-300' : 'bg-red-600 text-white'}`}>
+                    {car.status}
                 </div>
             </div>
-            <div className="p-4 poppins">
-                <h2 className="text-2xl font-bold rubik">
-                    {car.model}
+            <div className="p-4 font-mono">
+                <h2 className="text-xl font-bold rubik">
+                    {car.model} - {car.brand ? car.brand.name : "No Brand Available"}
                 </h2>
-                <p className="text-sm ">{car.mileage}</p>
-                <p className="mt-2 text-xl font-bold ">{car.price}</p>
-                <span className="inline-block bg-green-400 text-xs font-semibold px-2 py-1 rounded">
-                    Good Deal
+                <p className="text-sm text-muted-foreground font-semibold">{car.mileage} mi</p>
+                <p className="mt-2 text-lg font-semibold mb-2">${car.price}</p>
+                <span className="inline-block bg-green-300 text-xs font-semibold px-2 py-1 rounded">
+                    {car.price_category}
                 </span>
                 <div className="mt-4">
                     <h3 className="text-sm font-semibold">
-                        The Autobarn Volkswagen of Countryside
+                        {car.dealer_location}
                     </h3>
                     <div className="flex items-center mt-1">
                         <div className="flex text-yellow-400">
@@ -48,7 +49,7 @@ const CarCard = ({ car }) => {
                     <p className="text-sm mt-2">{car.location}</p>
                     <a
                         href="#"
-                        className="mt-4 block text-red-400 text-sm font-semibold"
+                        className="mt-4 block text-blue-700 text-sm font-semibold poppins"
                     >
                         View on dealer's site →
                     </a>

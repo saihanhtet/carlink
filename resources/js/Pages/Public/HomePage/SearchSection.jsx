@@ -20,6 +20,7 @@ const SearchSection = () => {
                 playsInline
                 className="absolute inset-0 h-full w-full object-cover"
             />
+
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-900/50 via-black-500/0 to-yellow-500/30 backdrop-blur-0"></div>
             {/* Hero Section Overlay */}

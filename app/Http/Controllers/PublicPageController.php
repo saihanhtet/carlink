@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Car;  // Import the Car model
 
 class PublicPageController extends Controller
 {
@@ -14,13 +15,13 @@ class PublicPageController extends Controller
      * @param string $view
      * @return \Inertia\Response
      */
-    public function renderPage(string $view)
+    public function renderPage(string $view, $data = [])
     {
-        return Inertia::render($view, [
+        return Inertia::render($view, array_merge([
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'isLoggedIn' => Auth::check(),
-        ]);
+        ], $data));
     }
 
     public function welcome()
@@ -45,6 +46,13 @@ class PublicPageController extends Controller
 
     public function carListing()
     {
-        return $this->renderPage('Public/CarListingsPage/page');
+        // Fetch paginated cars from the database (adjust the page size as needed)
+        $cars = Car::with('brand')->paginate(15);
+
+        // Pass the paginated cars to the frontend
+        return $this->renderPage('Public/CarListingsPage/page', [
+            'cars' => $cars,  // Passing paginated car data to the view
+        ]);
     }
+
 }

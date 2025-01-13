@@ -69,10 +69,10 @@ export function AppSidebar({ onApplyFilters, ...props }) {
 
     return (
         <Sidebar {...props}>
-            <SidebarHeader className="text-md font-semibold rubik capitalize text-primary">
+            <SidebarHeader className="text-md font-semibold rubik capitalize text-primary bg-white">
                 Filter your car
             </SidebarHeader>
-            <SidebarContent className="gap-2 poppins overflow-y-auto max-h-[calc(100vh-80px)]">
+            <SidebarContent className="gap-2 poppins overflow-y-auto h-[calc(100vh-80px)] bg-white">
                 {/* Render each filter dropdown */}
                 {data.navMain[0].items.map((filter) => (
                     <Collapsible

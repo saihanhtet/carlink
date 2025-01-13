@@ -26,16 +26,14 @@ class CarFactory extends Factory
             ['name' => 'Luxury Auto Mart', 'location' => 'Charlotte, NC'],
             ['name' => 'Dream Cars Dealer', 'location' => 'Austin, TX'],
         ];
-
         // Select a random brand
         $brand = Brand::inRandomOrder()->first() ?? Brand::factory()->create();
-
         // Select a random model based on the brand
         $models = $carsByBrand[$brand->name] ?? ['Generic Model'];
-
         // Select a random dealer
         $dealer = $this->faker->randomElement($dealers);
-
+        // Generate a random timestamp within the last 12 months
+        $createdAt = $this->faker->dateTimeBetween('-12 months', 'now');
         return [
             'user_id' => User::factory(),
             'brand_id' => $brand->id,
@@ -48,6 +46,8 @@ class CarFactory extends Factory
             'price_category' => $this->faker->randomElement($priceCategory),
             'image' => $this->faker->imageUrl(640, 480, 'cars', true),
             'status' => $this->faker->randomElement(['open', 'close']),
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
         ];
     }
 }

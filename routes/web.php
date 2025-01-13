@@ -17,6 +17,9 @@ Route::get('/about-us', [PublicPageController::class, 'aboutUs'])->name('about-u
 Route::get('/contact-us', [PublicPageController::class, 'contactUs'])->name('contact-us-page');
 Route::get('/car-listing', [PublicPageController::class, 'carListing'])->name('car-listing-page');
 
+// Resources Routes Not Need Authentication
+Route::resource('/cars', CarController::class);
+
 // Authenticated Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [PrivatePageController::class, 'dashboard'])->name('dashboard');
@@ -28,7 +31,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/dashboard/settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Resources Routes
-    Route::resource('/cars', CarController::class);
     Route::resource('/bids', BidController::class);
     Route::resource('/appointments', AppointmentController::class);
     Route::resource('/transactions', TransactionController::class);

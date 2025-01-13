@@ -20,7 +20,9 @@ class Car extends Model
         'dealer_name',
         'dealer_location',
         'image',
-        'status'
+        'status',
+        'created_at',
+        'updated_at'
     ];
 
     // Relationships
