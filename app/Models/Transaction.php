@@ -16,18 +16,6 @@ class Transaction extends Model
         'transaction_date'
     ];
 
-    public static function validationRules()
-    {
-        return [
-            'car_id' => 'required|exists:cars,id',
-            'buyer_id' => 'required|exists:users,id',
-            'seller_id' => 'required|exists:users,id',
-            'final_price' => 'required|numeric|min:1',
-            'transaction_date' => 'required|date',
-        ];
-    }
-
-
     // Relationships
     public function buyer()
     {

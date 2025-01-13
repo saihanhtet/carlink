@@ -10,27 +10,18 @@ class Car extends Model
     use HasFactory;
 
     protected $fillable = [
+        'brand_id',
         'user_id',
         'make',
         'model',
         'registration_year',
         'price',
-        'image_path',
-        'is_active'
+        'mileage',
+        'dealer_name',
+        'dealer_location',
+        'image',
+        'status'
     ];
-
-    public static function validationRules($isUpdate = false)
-    {
-        return [
-            'make' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
-            'registration_year' => 'required|integer|min:1900|max:' . date('Y'),
-            'price' => 'required|numeric|min:0',
-            'image_path' => $isUpdate ? 'nullable|string|max:255' : 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'status' => 'required|in:active,inactive', // For "Activate/Deactivate" status
-        ];
-    }
 
     // Relationships
     public function user()
@@ -52,4 +43,10 @@ class Car extends Model
     {
         return $this->hasOne(Transaction::class);
     }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
 }

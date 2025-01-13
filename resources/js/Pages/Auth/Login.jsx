@@ -1,8 +1,8 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import Checkbox from '@/components/Checkbox';
+import InputError from '@/components/InputError';
+import InputLabel from '@/components/InputLabel';
+import TextInput from '@/components/TextInput';
+import { Button } from '@/components/ui/button';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -24,7 +24,7 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout showHeaderFooter={false}>
             <Head title="Log in" />
             <div className="grid min-h-screen lg:grid-cols-2">
 
@@ -88,7 +88,7 @@ export default function Login({ status, canResetPassword }) {
                                             {canResetPassword && (
                                                 <Link
                                                     href={route('password.request')}
-                                                    className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                    className="rounded-md text-sm  underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                 >
                                                     Forgot your password?
                                                 </Link>
@@ -117,7 +117,7 @@ export default function Login({ status, canResetPassword }) {
                                                 setData('remember', e.target.checked)
                                             }
                                         />
-                                        <span className="ms-2 text-sm text-gray-600">
+                                        <span className="ms-2 text-sm text-muted-foreground">
                                             Remember me
                                         </span>
                                     </label>
@@ -126,14 +126,14 @@ export default function Login({ status, canResetPassword }) {
                                 <div className="mt-4 flex items-center justify-end">
                                     <Link
                                         href={route('register')}
-                                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        className="rounded-md text-sm underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                     >
                                         New User?
                                     </Link>
 
-                                    <PrimaryButton className="ms-4" disabled={processing}>
+                                    <Button className="ms-4" disabled={processing}>
                                         Log in
-                                    </PrimaryButton>
+                                    </Button>
                                 </div>
                             </form>
                         </div>

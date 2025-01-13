@@ -1,15 +1,14 @@
-import Footer from '@/Components/Footer';
-import Navbar from '@/Components/Navbar';
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
-
-export default function GuestLayout({ children }) {
+export default function GuestLayout({ children, showHeaderFooter = true, canLogin, canRegister, isLoggedIn }) {
     return (
         <>
-            <Navbar />
-            <div>
+            {showHeaderFooter && <Navbar canLogin={canLogin} canRegister={canRegister} isLoggedIn={isLoggedIn} />}
+            <div className={showHeaderFooter ? "mt-[72px]" : ""}>
                 {children}
             </div>
-            <Footer />
+            {showHeaderFooter && <Footer />}
         </>
     );
 }

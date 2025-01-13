@@ -15,15 +15,6 @@ class Bid extends Model
         'bid_price'
     ];
 
-    public static function validationRules()
-    {
-        return [
-            'car_id' => 'required|exists:cars,id',
-            'user_id' => 'required|exists:users,id',
-            'bidding_price' => 'required|numeric|min:1',
-        ];
-    }
-
     // Relationships
     public function user()
     {

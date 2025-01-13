@@ -1,7 +1,7 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import InputError from '@/components/InputError';
+import InputLabel from '@/components/InputLabel';
+import TextInput from '@/components/TextInput';
+import { Button } from '@/components/ui/button';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -22,7 +22,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout showHeaderFooter={false}>
             <Head title="Register" />
             <div className="grid min-h-screen lg:grid-cols-2">
                 {/* Left Panel with Advanced Wallpaper */}
@@ -145,14 +145,14 @@ export default function Register() {
                                 <div className="mt-4 flex items-center justify-end">
                                     <Link
                                         href={route('login')}
-                                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        className="rounded-md text-sm underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                     >
                                         Already registered?
                                     </Link>
 
-                                    <PrimaryButton className="ms-4" disabled={processing}>
+                                    <Button className="ms-4" disabled={processing}>
                                         Register
-                                    </PrimaryButton>
+                                    </Button>
                                 </div>
                             </form>
                         </div>

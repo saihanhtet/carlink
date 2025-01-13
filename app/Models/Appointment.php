@@ -16,16 +16,6 @@ class Appointment extends Model
         'status'
     ];
 
-    public static function validationRules()
-    {
-        return [
-            'car_id' => 'required|exists:cars,id',
-            'user_id' => 'required|exists:users,id',
-            'date' => 'required|date|after_or_equal:today',
-            'status' => 'required|in:pending,approved,denied',
-        ];
-    }
-
     // Relationships
     public function user()
     {
