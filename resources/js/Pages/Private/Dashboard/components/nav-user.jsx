@@ -1,13 +1,3 @@
-"use client"
-
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut
-} from "lucide-react"
-import { Link, router } from "@inertiajs/react"
 import {
     Avatar,
     AvatarFallback,
@@ -28,6 +18,13 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
+import { Link, router } from "@inertiajs/react"
+import {
+    BadgeCheck,
+    Bell,
+    ChevronsUpDown,
+    LogOut
+} from "lucide-react"
 
 export function NavUser({
     user,

@@ -5,7 +5,7 @@ import React from 'react'
 const Analytics = () => {
     const breadcrumbs = [
         { name: 'Dashboard', link: route('dashboard') },
-        { name: 'Car Sales', link: route('car-sales') },
+        { name: 'Car Sales', link: route('car-sales-dashboard') },
     ];
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>

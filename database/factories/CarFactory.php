@@ -34,6 +34,7 @@ class CarFactory extends Factory
         $dealer = $this->faker->randomElement($dealers);
         // Generate a random timestamp within the last 12 months
         $createdAt = $this->faker->dateTimeBetween('-12 months', 'now');
+
         return [
             'user_id' => User::factory(),
             'brand_id' => $brand->id,

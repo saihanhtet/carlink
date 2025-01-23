@@ -36,9 +36,9 @@ const PopularCategories = () => {
                             <CardFooter className="flex justify-end items-center py-4">
                                 <Button
                                     variant="link"
-                                    className="font-semibold text-primary"
+                                    className="font-semibold font-mono text-primary underline hover:text-blue-600"
                                 >
-                                    Shop Now
+                                    Learn Now
                                 </Button>
                             </CardFooter>
                         </Card>

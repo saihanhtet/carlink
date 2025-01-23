@@ -12,7 +12,7 @@ const CarCard = ({ car }) => {
                 />
                 <div className={`absolute top-0 left-0 text-xs font-semibold px-2 py-1 capitalize
                 ${car.status === 'open' ? 'bg-yellow-300' : 'bg-red-600 text-white'}`}>
-                    {car.status}
+                    Bidding {car.status}
                 </div>
             </div>
             <div className="p-4 font-mono">
@@ -51,7 +51,7 @@ const CarCard = ({ car }) => {
                         href="#"
                         className="mt-4 block text-blue-700 text-sm font-semibold poppins"
                     >
-                        View on dealer's site →
+                        View Details →
                     </a>
                 </div>
             </div>

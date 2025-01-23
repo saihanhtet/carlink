@@ -32,7 +32,14 @@ class SchemaDefinitions
     public static function brandsTable(Blueprint $table)
     {
         $table->id();
-        $table->string('name')->unique(); // Unique brand names
+        $table->string('name')->unique();
+        $table->timestamps();
+    }
+
+    public static function fuelsTable(Blueprint $table)
+    {
+        $table->id();
+        $table->string('name')->unique();
         $table->timestamps();
     }
 
@@ -41,13 +48,14 @@ class SchemaDefinitions
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
+        $table->foreignId('fuel_id')->constrained('fuels')->onDelete('cascade');
         $table->string('model');
         $table->integer('registration_year');
         $table->decimal('price', 10, 2);
         $table->integer('mileage');
         $table->string('dealer_name')->nullable();
         $table->string('dealer_location')->nullable();
-        $table->enum('price_category', ['Good Deal', 'Fair Deal', 'Overpriced'])->nullable();
+        $table->enum('price_category', ['Good Deal', 'Fair Deal', 'Overpriced', 'Underpriced'])->nullable();
         $table->string('image')->nullable();
         $table->enum('status', ['open', 'close'])->default('open');
         $table->timestamps();

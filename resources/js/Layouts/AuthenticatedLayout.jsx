@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { DashboardSidebar } from '@/Pages/Private/Dashboard/dashboard-sidebar';
+import { DashboardSidebar } from '@/Pages/Private/Dashboard/components/dashboard-sidebar';
 import { usePage } from '@inertiajs/react';
 import { Separator } from '@radix-ui/react-select';
 
