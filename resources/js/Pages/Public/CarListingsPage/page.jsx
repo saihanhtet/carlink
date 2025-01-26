@@ -1,4 +1,5 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
     Pagination,
     PaginationContent,
@@ -11,10 +12,9 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { router, usePage } from "@inertiajs/react";
+import { FilterIcon } from "lucide-react";
 import CarCard from "./CarCard";
 import { AppSidebar } from "./filter-sidebar";
-import { FilterIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const CarListingWithSidebar = ({ canLogin, canRegister, isLoggedIn }) => {
     const { cars, brands, fuels, selectedFilters, isFilterActive, status } = usePage().props;

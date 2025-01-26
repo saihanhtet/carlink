@@ -132,7 +132,7 @@ export function AppSidebar({
 
     return (
         <Sidebar {...props}>
-            <SidebarHeader className="flex items-center justify-between p-2 bg-white text-md font-semibold flex-row text-primary">
+            <SidebarHeader className="flex items-center justify-between p-2 bg-white text-md font-semibold flex-row text-primary-foreground">
                 <span>Filter your car</span>
                 <Button variant="ghost" onClick={handleClearFilters} className={`${!isFilterActive ? 'opacity-0' : ''}`}
                     disable={!isFilterActive}

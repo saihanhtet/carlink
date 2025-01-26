@@ -5,14 +5,14 @@ const YourGarageSection = () => {
     return (
         <section className="flex flex-col md:flex-row items-center justify-betwee py-10 px-6 md:px-16 border rounded-md poppins">
             <div className="md:w-1/2 text-center md:text-left">
-                <h2 className="text-3xl font-bold rubik text-primary mb-4">Your Garage</h2>
+                <h2 className="text-3xl font-bold rubik text-primary-foreground mb-4">Your Garage</h2>
                 <p className="text-lg text-white-600 mb-6">
                     Add your car. Track its value.
                 </p>
                 <p className="text-white-600 mb-4">
                     Add your car to Your Garage to track its market value and cash in
                     when the time is right to sell.{" "}
-                    <Link href="#" className="text-primary hover:underline font-semibold text-md capitalize">
+                    <Link href="#" className="text-primary-foreground hover:underline font-semibold text-md capitalize">
                         Learn more
                     </Link>
                 </p>
@@ -22,7 +22,7 @@ const YourGarageSection = () => {
                     </Link>
                     <p className="text-sm">
                         Already have an account?{" "}
-                        <Link href={route('login')} className="text-primary font-semibold text-md capitalize hover:underline">
+                        <Link href={route('login')} className="text-primary-foreground font-semibold text-md capitalize hover:underline">
                             Sign in.
                         </Link>
                     </p>

@@ -25,6 +25,7 @@ class PublicPageController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'isLoggedIn' => Auth::check(),
+            'isPublicPage' => true,
         ], $data));
     }
 

@@ -60,7 +60,7 @@ export function DashboardSidebar({ user, ...props }) {
 
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
+            <SidebarHeader className='bg-background'>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
@@ -76,10 +76,10 @@ export function DashboardSidebar({ user, ...props }) {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            <SidebarContent className="overflow-y-auto">
+            <SidebarContent className="overflow-y-auto bg-background">
                 <NavMain items={data.navMain} />
             </SidebarContent>
-            <SidebarFooter>
+            <SidebarFooter className='bg-background'>
                 {user && <NavUser user={user} />}
             </SidebarFooter>
             <SidebarRail />

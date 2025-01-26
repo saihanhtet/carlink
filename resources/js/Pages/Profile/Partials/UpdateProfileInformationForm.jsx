@@ -26,7 +26,7 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-xl font-bold rubik text-primary">
+                <h2 className="text-xl font-bold rubik text-primary-foreground">
                     Profile Information
                 </h2>
                 <p className="mt-1 text-md poppins ">

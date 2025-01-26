@@ -4,6 +4,8 @@ import TextInput from '@/components/TextInput';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
+import { handleFormSubmit } from '@/lib/utils';
+import { Alert } from '@/components/ui/alert';
 
 export default function CarForm({ brands, fuels, car = null, className = '', otherCars = [], user }) {
     const {
@@ -23,30 +25,20 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
         price: car?.price || '',
         mileage: car?.mileage || '',
         dealer_name: car?.dealer_name || user?.name || '',
-        dealer_location: car?.dealer_location || user?.location || '',
+        dealer_location: car?.dealer_location || user?.profile.address || '',
     });
+    const [alert, setAlert] = useState(null); // Manage alert state
 
     // Handle the form submission (either update or create)
     const handleSubmit = () => {
-        const routeUrl = car
-            ? route('cars.update', { car: car.id })
-            : route('cars.store'); // Determine URL based on whether it's an update or create
-
-        const action = car ? put : post; // Use PUT for update, POST for create
-
-        action(routeUrl, {
-            preserveScroll: true,
-            onSuccess: () => {
-                reset(); // Reset form on success
-                clearErrors(); // Clear errors
-            },
-            onError: (error) => {
-                console.error('Submission error:', error);
-                // Log more details if available
-                if (error?.response?.data) {
-                    console.error('Response data:', error.response.data);
-                }
-            },
+        handleFormSubmit({
+            data,
+            model: 'cars',
+            instance: car,
+            actions: { post, put },
+            reset,
+            clearErrors,
+            setAlert, // Pass setAlert to handle alert messages
         });
     };
 
@@ -79,8 +71,9 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
 
     return (
         <section className={`space-y-6 ${className}`}>
+            {alert && <Alert variant={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
             <header>
-                <h2 className="text-xl font-bold rubik text-primary">
+                <h2 className="text-xl font-bold rubik text-primary-foreground">
                     {car ? 'Edit Car' : 'Add New Car'}
                 </h2>
             </header>
@@ -208,7 +201,7 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
             </div>
 
             <div className="mt-4">
-                <p className="text-primary">
+                <p className="text-primary-foreground">
                     Deal Status: <span className="font-bold">{fairDealStatus || 'N/A'}</span>
                 </p>
             </div>
