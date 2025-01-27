@@ -2,38 +2,51 @@
 
 namespace App\Http\Services;
 
+use App\Models\Bid;
 use App\Models\Car;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardService
 {
+    /**
+     * Get dashboard data based on the user's role.
+     *
+     * @param string $role
+     * @return array
+     */
     public function getDashboardData(string $role): array
     {
-        if ($role === 'admin') {
-            return [
-                'user' => false,
-                'admin' => true,
-                'role' => 'admin',
-            ];
-        }
-
         return [
-            'user' => true,
-            'admin' => false,
-            'role' => 'user',
+            'user' => $role !== 'admin',
+            'admin' => $role === 'admin',
+            'role' => $role,
         ];
     }
 
+    /**
+     * Retrieve cars belonging to the authenticated user.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function getUserCars()
     {
         $user = Auth::user();
-        $cars = Car::where('user_id', $user->id)->with(['brand', 'fuel'])->orderBy('created_at', 'desc');
-        return $cars;
+
+        return Car::where('user_id', $user->id)
+            ->with(['brand', 'fuel'])
+            ->orderBy('created_at', 'desc');
     }
 
-    public function calculateTotalProfit($carsQuery)
+    /**
+     * Calculate total profit from the user's cars.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $carsQuery
+     * @return float
+     */
+    public function calculateTotalProfit($carsQuery): float
     {
         $cars = $carsQuery->get();
+
         return $cars->reduce(function ($carry, $car) {
             $highestBid = $car->bids()->max('bid_price');
             $profit = $highestBid ? $highestBid - $car->price : 0;
@@ -41,11 +54,16 @@ class DashboardService
         }, 0);
     }
 
+    /**
+     * Get user cars with associated transactions (latest 10).
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getUserCarsWithTransactions()
     {
         $user = Auth::user();
 
-        $cars = Car::select(
+        return Car::select(
             'cars.id as car_id',
             'cars.model',
             'transactions.id as transaction_id',
@@ -53,27 +71,49 @@ class DashboardService
             'transactions.final_price',
             'fuels.name as fuel_name'
         )
-            ->join('transactions', 'cars.id', '=', 'transactions.car_id') // Correct join for transactions
-            ->join('fuels', 'fuels.id', '=', 'cars.fuel_id') // Correct join for fuels
-            ->where('cars.user_id', $user->id) // Filter by user ID
-            ->orderBy('transactions.transaction_date', 'desc') // Order by latest transactions
-            ->limit(10) // Limit to 10 records
+            ->join('transactions', 'cars.id', '=', 'transactions.car_id')
+            ->join('fuels', 'fuels.id', '=', 'cars.fuel_id')
+            ->where('cars.user_id', $user->id)
+            ->orderBy('transactions.transaction_date', 'desc')
+            ->limit(10)
             ->get();
-
-        return $cars;
     }
 
+    /**
+     * Retrieve bidding information related to the user's cars.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getBiddingRelatedWithUserCar()
+    {
+        $user = Auth::user();
+        // Fetch all bids made on cars owned by the logged-in user
+        $bids = Bid::with(['user', 'car'])
+        ->whereHas('car', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->orderBy('created_at', 'desc')->get();
+        return $bids;
+    }
+
+    /**
+     * Get user cars with transactions, including additional relationships.
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function getUserCarsWithTransactionsTwo()
     {
         $user = Auth::user();
-        $cars = Car::with(['brand', 'fuel', 'transaction', 'transaction.buyer']) // Eager-load brand and fuel relationships
-            ->join('transactions', 'cars.id', '=', 'transactions.car_id') // Correct join for transactions
-            ->where('cars.user_id', $user->id) // Filter by user ID
-            ->orderBy('transactions.transaction_date', 'desc') // Order by latest transactions
-            ->limit(10) // Limit to 10 records
-            ->get(['cars.*', 'transactions.id as transaction_id', 'transactions.transaction_date', 'transactions.final_price']); // Select specific columns from cars and transactions
-        return $cars;
+
+        return Car::with(['brand', 'fuel', 'transaction', 'transaction.buyer'])
+        ->join('transactions', 'cars.id', '=', 'transactions.car_id')
+        ->where('cars.user_id', $user->id)
+            ->orderBy('transactions.transaction_date', 'desc')
+            ->limit(10)
+            ->get([
+                'cars.*',
+                'transactions.id as transaction_id',
+                'transactions.transaction_date',
+                'transactions.final_price',
+            ]);
     }
-
-
 }

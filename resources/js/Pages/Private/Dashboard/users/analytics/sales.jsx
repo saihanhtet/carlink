@@ -2,7 +2,7 @@ import ReUsableTable from '@/components/reusabletable';
 import { Button } from '@/components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
-import React from 'react'
+import React, { useState } from 'react';
 
 const Analytics = () => {
     const breadcrumbs = [
@@ -10,42 +10,21 @@ const Analytics = () => {
         { name: 'Car Sales Transactions', link: route('car-sales-dashboard') },
     ];
     const { transactions } = usePage().props;
+    const [selectedFilter, setSelectedFilter] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
 
-    const tableHeaders = [
-        { title: "Txn ID", className: "w-[100px]" },
-        { title: "Car ID", className: "w-[100px]" },
-        { title: "Car Model" },
-        { title: "Fuel", className: "w-[200px]" },
-        { title: "Buyer", className: "w-[200px]" },
-        { title: "Txn Date" },
-        { title: "Final Price", className: "text-right" },
-        { title: "Actions", className: "w-[150px] text-center" }
-    ];
-
-    const tableData = transactions?.map((car) => {
-        return [
-            { content: car.transaction_id, className: "font-medium" },
-            { content: car.id, className: "font-medium" },
-            { content: car.model, className: "font-medium" },
-            { content: car.fuel.name, className: "font-medium" },
-            { content: car.transaction.buyer.name, className: "font-medium" },
-            { content: car.transaction_date },
-            { content: `$${car.final_price}`, className: "text-right" },
+    const transformData = (data) =>
+        data.map((car) => [
+            { content: car.transaction.id, className: 'font-medium' },
+            { content: car.id },
+            { content: car.model },
+            { content: car.fuel.name },
+            { content: car.transaction.buyer.name },
+            { content: car.transaction.transaction_date },
+            { content: `$${car.transaction.final_price.toLocaleString()}`, className: 'text-right' },
             {
                 content: (
                     <div className="flex justify-center gap-2">
-                        {/* <Button
-                            className="bg-blue-500 text-white px-2 py-1 rounded w-[60px]"
-                            onClick={() => handleEdit(car.id)}
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            className="bg-red-500 text-white px-2 py-1 rounded w-[60px]"
-                            onClick={() => handleDelete(car.id)}
-                        >
-                            Delete
-                        </Button> */}
                         <Button
                             className="bg-yellow-400 hover:bg-yellow-500 text-black px-2 py-1 rounded w-[60px]"
                             onClick={() => handleView(car.id)}
@@ -54,27 +33,91 @@ const Analytics = () => {
                         </Button>
                     </div>
                 ),
-                className: "text-center",
+                className: 'text-center',
             },
-        ];
-    });
+        ]);
+
+    const tableHeaders = [
+        { title: 'Txn ID', className: 'w-[100px]' },
+        { title: 'Car ID', className: 'w-[100px]' },
+        { title: 'Car Model' },
+        { title: 'Fuel', className: 'w-[200px]' },
+        { title: 'Buyer', className: 'w-[200px]' },
+        { title: 'Txn Date' },
+        { title: 'Final Price', className: 'text-right' },
+        { title: 'Actions', className: 'w-[150px] text-center' },
+    ];
+
+    React.useEffect(() => {
+        setFilteredData(transformData(transactions.data || []));
+    }, [transactions.data]);
 
     const handleView = (id) => {
         console.log(`View car with ID: ${id}`);
     };
 
-    const filterDataFunc = (data) => {
-        console.log(data);
-    }
+    const handleSearch = (query) => {
+        const results = transactions.data.filter((car) =>
+            car.model.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredData(transformData(results));
+    };
+
+    const handleFilter = (filter) => {
+        setSelectedFilter(filter);
+
+        let sortedData = [...transactions.data];
+
+        // Sorting logic
+        switch (filter) {
+            case 'price_asc':
+                sortedData.sort((a, b) => a.transaction.final_price - b.transaction.final_price);
+                break;
+            case 'price_desc':
+                sortedData.sort((a, b) => b.transaction.final_price - a.transaction.final_price);
+                break;
+            case 'date_asc':
+                sortedData.sort(
+                    (a, b) =>
+                        new Date(a.transaction.transaction_date) -
+                        new Date(b.transaction.transaction_date)
+                );
+                break;
+            case 'date_desc':
+                sortedData.sort(
+                    (a, b) =>
+                        new Date(b.transaction.transaction_date) -
+                        new Date(a.transaction.transaction_date)
+                );
+                break;
+            default:
+                break;
+        }
+
+        setFilteredData(transformData(sortedData));
+    };
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
             <Head title="Car Sales" />
-            <div className="">
-                <ReUsableTable tableHeaders={tableHeaders} tableData={tableData} filterFunc={filterDataFunc} />
+            <div>
+                <ReUsableTable
+                    caption="Transactions List"
+                    tableHeaders={tableHeaders}
+                    tableData={filteredData}
+                    onSearch={handleSearch}
+                    onFilter={handleFilter}
+                    selectedFilter={selectedFilter}
+                    filters={[
+                        { value: 'price_asc', label: 'Price: Low to High' },
+                        { value: 'price_desc', label: 'Price: High to Low' },
+                        { value: 'date_asc', label: 'Date: Oldest First' },
+                        { value: 'date_desc', label: 'Date: Newest First' },
+                    ]}
+                />
             </div>
         </AuthenticatedLayout>
     );
-}
+};
 
-export default Analytics
+export default Analytics;

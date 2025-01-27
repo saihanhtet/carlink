@@ -10,7 +10,7 @@ use App\Models\Car;
 use App\Models\Fuel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PrivatePageController extends Controller
@@ -98,16 +98,40 @@ class PrivatePageController extends Controller
         return $this->renderPage('Private/Dashboard/admin/car-management');
     }
 
-    public function salesDashboard()
+    public function salesDashboard(Request $request)
     {
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
-        $transactions = $this->dashboardService->getUserCarsWithTransactionsTwo();
+
+        // Retrieve query parameters for filters
+        $search = $request->input('search');
+        $filterFuel = $request->input('fuel');
+        $filterDate = $request->input('date');
+
+        // Query transactions with filters and eager loading
+        $transactionsQuery = Car::with(['fuel', 'transaction.buyer'])
+        ->when($search, function ($query, $search) {
+            $query->where('model', 'LIKE', "%{$search}%")
+            ->orWhere('transaction_id', 'LIKE', "%{$search}%");
+        })
+            ->when($filterFuel, function ($query, $filterFuel) {
+                $query->whereHas('fuel', function ($subQuery) use ($filterFuel) {
+                    $subQuery->where('name', $filterFuel);
+                });
+            })
+            ->when($filterDate, function ($query, $filterDate) {
+                $query->whereDate('transaction_date', $filterDate);
+            });
+
+        // Paginate results
+        $transactions = $transactionsQuery->paginate(10);
+
         $dashboardData = $this->dashboardService->getDashboardData($role);
         $dashboardData['transactions'] = $transactions;
 
         return $this->renderPage('Private/Dashboard/users/analytics/sales', $dashboardData);
     }
+
 
     public function uploadCarDashboard()
     {
@@ -153,8 +177,10 @@ class PrivatePageController extends Controller
     {
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
-
+        $allBids = $this->dashboardService->getBiddingRelatedWithUserCar();
         $dashboardData = $this->dashboardService->getDashboardData($role);
+        $dashboardData['allBids'] = $allBids;
+
         return $this->renderPage('Private/Dashboard/users/cars/bidding', $dashboardData);
     }
 

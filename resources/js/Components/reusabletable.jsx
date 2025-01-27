@@ -1,50 +1,36 @@
 
-import React, { useState, useEffect } from 'react';
-import { Button } from './ui/button';
 import TextInput from './TextInput';
 
-import { useForm } from '@inertiajs/react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Separator } from './ui/separator';
 
-const ReUsableTable = ({ caption, tableHeaders, tableData, className, filterFunc = null, ...props }) => {
-    // const [filteredData, setFilteredData] = useState(data);
-    const [searchQuery, setSearchQuery] = useState('');
-    const { data,
-        setData,
-    } = useForm({
-        filterData: ''
-    })
-    useEffect(() => {
-        filterFunc(data);
-    }, [data.filterData])
+const ReUsableTable = ({ caption, tableHeaders, tableData, className, filters, selectedFilter, onSearch, onFilter, ...props }) => {
     return (
         <div className="grid w-full">
             {/* Filters */}
             <div className="mb-4 flex w-full flex-wrap gap-2 justify-between">
-                <Select
-                    onValueChange={(value) => setData('filterData', value)}
-                    value={data.filterData}
-                >
-                    <SelectTrigger className="w-full md:max-w-[200px] border-muted-foreground text-center border shadow-sm focus:ring-0">
-                        <SelectValue placeholder="Filter" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem key={1} value={'hl'}>Highest to Lowest</SelectItem>
-                        <SelectItem key={2} value={'lh'}>Lowest to Highest</SelectItem>
-                        <SelectItem key={3} value={'date-asc'}>Date (Old to New)</SelectItem>
-                        <SelectItem key={4} value={'date-desc'}>Date (New to Old)</SelectItem>
-                    </SelectContent>
-                </Select>
+                {filters && (
+                    <Select
+                        onValueChange={(value) => onFilter(value)}
+                    >
+                        <SelectTrigger className="w-full md:max-w-[200px] border-muted-foreground text-center border shadow-sm focus:ring-0">
+                            <SelectValue placeholder="Filter" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {filters.map((filter) => (
+                                <SelectItem key={filter.value} value={filter.value}>{filter.label}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )}
+
                 <div className="w-full md:w-auto flex gap-2">
                     <TextInput
                         type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => onSearch(e.target.value)}
                         className="p-2 border border-muted-foreground rounded w-full focus:ring-0"
                         placeholder="Search..."
                     />
-                    <Button className="w-[200px]">Search</Button>
                 </div>
             </div>
 

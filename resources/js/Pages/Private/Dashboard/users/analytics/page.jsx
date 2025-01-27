@@ -13,20 +13,12 @@ const CardTemplate = ({ title, content, link, linkContent, className, ...props }
             {...props}
             className={cn("", className)}
         >
-            <CardHeader className="py-4">
+            <CardHeader className="py-5 ">
                 <CardTitle className="font-lg font-semibold rubik capitalize">{title}</CardTitle>
             </CardHeader>
             <CardContent className="font-semibold text-muted-foreground text-lg poppins text-right capitalize">
                 {content}
             </CardContent>
-            <CardFooter className="flex justify-end items-center border-t-2 border-muted py-3">
-                <Link
-                    href={link}
-                    className="underline text-muted-foreground font-semibold underline-offset-4 poppins capitalize"
-                >
-                    {linkContent}
-                </Link>
-            </CardFooter>
         </Card>
     );
 };
@@ -146,7 +138,7 @@ const Analytics = () => {
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div className="flex flex-1 flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     {/* Cards */}
                     <CardTemplate
