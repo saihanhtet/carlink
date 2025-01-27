@@ -27,7 +27,7 @@ class DashboardService
     public function getUserCars()
     {
         $user = Auth::user();
-        $cars = Car::where('user_id', $user->id)->with(['brand', 'fuel']);
+        $cars = Car::where('user_id', $user->id)->with(['brand', 'fuel'])->orderBy('created_at', 'desc');
         return $cars;
     }
 
@@ -62,5 +62,18 @@ class DashboardService
 
         return $cars;
     }
+
+    public function getUserCarsWithTransactionsTwo()
+    {
+        $user = Auth::user();
+        $cars = Car::with(['brand', 'fuel', 'transaction', 'transaction.buyer']) // Eager-load brand and fuel relationships
+            ->join('transactions', 'cars.id', '=', 'transactions.car_id') // Correct join for transactions
+            ->where('cars.user_id', $user->id) // Filter by user ID
+            ->orderBy('transactions.transaction_date', 'desc') // Order by latest transactions
+            ->limit(10) // Limit to 10 records
+            ->get(['cars.*', 'transactions.id as transaction_id', 'transactions.transaction_date', 'transactions.final_price']); // Select specific columns from cars and transactions
+        return $cars;
+    }
+
 
 }

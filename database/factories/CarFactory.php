@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Car;
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\Fuel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CarFactory extends Factory
@@ -28,6 +29,7 @@ class CarFactory extends Factory
         ];
         // Select a random brand
         $brand = Brand::inRandomOrder()->first() ?? Brand::factory()->create();
+        $fuel = Fuel::inRandomOrder()->first() ?? Fuel::factory()->create();
         // Select a random model based on the brand
         $models = $carsByBrand[$brand->name] ?? ['Generic Model'];
         // Select a random dealer
@@ -45,6 +47,7 @@ class CarFactory extends Factory
             'dealer_name' => $dealer['name'],
             'dealer_location' => $dealer['location'],
             'price_category' => $this->faker->randomElement($priceCategory),
+            'fuel_id' =>  $fuel->id,
             'image' => $this->faker->imageUrl(640, 480, 'cars', true),
             'status' => $this->faker->randomElement(['open', 'close']),
             'created_at' => $createdAt,

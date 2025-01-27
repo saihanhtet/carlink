@@ -2,13 +2,55 @@ import { usePage } from "@inertiajs/react"
 import { NavMain } from "./nav-main"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarRail } from "@/components/ui/sidebar"
 import { Link } from "@inertiajs/react"
-import { Car, CarFrontIcon, ChartCandlestick } from "lucide-react"
+import { Car, CarFrontIcon, ChartCandlestick, User } from "lucide-react"
 import { NavUser } from "./nav-user"
 
-export function DashboardSidebar({ user, ...props }) {
+export function DashboardSidebar({ user, admin, ...props }) {
     const { url } = usePage() // Get the current URL
+    const isAdmin = admin === 1 ? true : false;
 
     // Dynamically update the isActive flag based on the current route
+    const adminData = {
+        navMain: [
+            {
+                title: "Analytics",
+                url: "#",
+                icon: ChartCandlestick,
+                items: [
+                    {
+                        title: "Dashboard",
+                        url: new URL(route("dashboard")).pathname,
+                        isActive: url === new URL(route("dashboard")).pathname
+                    },
+                ],
+            },
+            {
+                title: "Cars",
+                url: "#",
+                icon: Car,
+                items: [
+                    {
+                        title: "Cars Approve",
+                        url: new URL(route("car-management-dashboard")).pathname,
+                        isActive: url === new URL(route("car-management-dashboard")).pathname
+                    },
+                ],
+            },
+            {
+                title: "Users",
+                url: "#",
+                icon: User,
+                items: [
+                    {
+                        title: "Management",
+                        url: new URL(route("user-management-dashboard")).pathname,
+                        isActive: url === new URL(route("user-management-dashboard")).pathname
+                    },
+                ],
+            },
+        ],
+    }
+
     const data = {
         navMain: [
             {
@@ -77,7 +119,7 @@ export function DashboardSidebar({ user, ...props }) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent className="overflow-y-auto bg-background">
-                <NavMain items={data.navMain} />
+                <NavMain items={isAdmin ? adminData.navMain : data.navMain} />
             </SidebarContent>
             <SidebarFooter className='bg-background'>
                 {user && <NavUser user={user} />}

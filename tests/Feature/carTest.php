@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Brand;
+use App\Models\Fuel;
 use App\Models\User;
 
 test('user can view car listings', function () {
@@ -14,6 +15,7 @@ test('user can view car listings', function () {
 test('authenticated user can create a car listing', function () {
     $user = User::factory()->create(); // Create a user
     $brand = Brand::factory()->create(); // Create a brand
+    $fuel = Fuel::factory()->create();
 
     $this->actingAs($user); // Log the user in
 
@@ -26,10 +28,10 @@ test('authenticated user can create a car listing', function () {
         'dealer_name' => 'Dealer XYZ',
         'dealer_location' => 'Location ABC',
         'status' => 'open',
-        'image' => 'test.jpg',
+        'fuel_id' => $fuel->id,
     ]);
 
-    $response->assertStatus(201);
+    $response->assertSessionHasNoErrors()->assertRedirect('/dashboard/cars/car-upload');
     $this->assertDatabaseHas('cars', [
         'model' => 'Model Y',
         'brand_id' => $brand->id,

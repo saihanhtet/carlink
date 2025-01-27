@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bid;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,35 @@ class PublicPageController extends Controller
     {
         return $this->renderPage('Public/ContactUsPage/page');
     }
+
+    public function carDetailsPage($id)
+    {
+        // Fetch the car with its related brand, fuel, and owner
+        $currentCar = Car::with(['brand', 'fuel', 'user'])->findOrFail($id);
+        $currentCar->image = $currentCar->image ? asset('storage/' . $currentCar->image) : null;
+
+        // Fetch bids for the current car
+        $currentBids = Bid::with('user')->where('car_id', $id)->get();
+        $highestBid = $currentBids->max('bid_price');
+        $lastBid = $currentBids->last();
+
+        // Determine if the user can bid
+        $user = auth()->user(); // Get the authenticated user
+        $bidable = $user->id !== $currentCar->user_id; // Check if user is authenticated and not the car owner
+
+        // Prepare the data to be passed to the view
+        $data = [
+            'car' => $currentCar,
+            'currentBid' => $currentBids,
+            'highestBid' => $highestBid,
+            'lastBid' => $lastBid,
+            'user' => $user,
+            'bidable' => $bidable, // Pass the bidable status to the view
+        ];
+
+        return $this->renderPage('Public/CarListingsPage/details', $data);
+    }
+
 
     public function carListing(Request $request)
     {

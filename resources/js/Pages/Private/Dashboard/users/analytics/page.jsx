@@ -22,7 +22,7 @@ const CardTemplate = ({ title, content, link, linkContent, className, ...props }
             <CardFooter className="flex justify-end items-center border-t-2 border-muted py-3">
                 <Link
                     href={link}
-                    className="underline text-primary-foreground font-semibold underline-offset-4 poppins capitalize"
+                    className="underline text-muted-foreground font-semibold underline-offset-4 poppins capitalize"
                 >
                     {linkContent}
                 </Link>
@@ -38,7 +38,7 @@ const TableTemplate = ({ caption, headers, data, className, ...props }) => {
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     {/* Caption */}
                     {caption && (
-                        <caption className="p-5 text-lg font-bold text-left rtl:text-right text-primary-foreground  capitalize">
+                        <caption className="p-5 text-lg font-bold text-left rtl:text-right text-muted-foreground  capitalize">
                             {caption}
                             <p className="mt-1 text-sm font-seminormal text-muted-foreground">
                                 Browse your data in the table below.
@@ -52,7 +52,7 @@ const TableTemplate = ({ caption, headers, data, className, ...props }) => {
                             {headers.map((header, index) => (
                                 <th
                                     key={index}
-                                    className={`px-6 py-3 text-xs uppercase text-primary-foreground ${header.className || ""}`}
+                                    className={`px-6 py-3 text-xs uppercase text-white ${header.className || ""}`}
                                 >
                                     {header.title}
                                 </th>

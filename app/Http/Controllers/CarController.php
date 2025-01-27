@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller
@@ -26,6 +27,7 @@ class CarController extends Controller
         $car->image = $car->image ? asset('storage/cars_images/' . basename($car->image)) : null; // Update image URL path
         return response()->json($car);
     }
+
 
     // Store a new car with an image
     public function store(Request $request)
@@ -52,11 +54,7 @@ class CarController extends Controller
 
         // Create the car
         $car = Car::create(array_merge($validated, ['user_id' => auth()->id()]));
-
-        return response()->json([
-            'message' => 'Car created successfully.',
-            'car' => $car,'image_url' => $car->image ? asset('storage/cars_images/' . basename($car->image)) : null, // Return image URL
-        ], 201);
+        return Redirect::route('car-upload-dashboard');
     }
 
     // Update car details with image
@@ -86,10 +84,11 @@ class CarController extends Controller
         // Update car
         $car->update($validated);
 
-        return response()->json([
-            'message' => 'Car updated successfully.','car' => $car,
-            'image_url' => $car->image ? asset('storage/cars_images/' . basename($car->image)) : null, // Return image URL
-        ]);
+        // return response()->json([
+        //     'message' => 'Car updated successfully.','car' => $car,
+        //     'image_url' => $car->image ? asset('storage/cars_images/' . basename($car->image)) : null, // Return image URL
+        // ]);
+        return Redirect::route('car-list-dashboard')->with('success', 'Car  successfully.');
     }
 
     // Delete a car and its image
@@ -100,6 +99,10 @@ class CarController extends Controller
         }
 
         $car->delete();
-        return response()->json(['message' => 'Car deleted successfully.']);
+
+        // Redirect to the car list dashboard with a success message
+        return Redirect::route('car-list-dashboard')
+        ->with('success', 'Car deleted successfully.');
     }
+
 }

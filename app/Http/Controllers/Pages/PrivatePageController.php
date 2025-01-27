@@ -30,7 +30,7 @@ class PrivatePageController extends Controller
      * @param string $view
      * @return \Inertia\Response
      */
-    public function renderPage(string $view, $data = [])
+    private function renderPage(string $view, array $data = [])
     {
         return Inertia::render($view, array_merge([
             'isLoggedIn' => Auth::check(),
@@ -38,7 +38,22 @@ class PrivatePageController extends Controller
         ], $data));
     }
 
-    public function analyticsDashboard()
+    public function dashboard()
+    {
+        $user = Auth::user();
+        if ($user->is_admin) {
+            return $this->renderPage('Private/Dashboard/admin/page', $this->getAdminData());
+        }
+        return $this->renderPage('Private/Dashboard/users/analytics/page', $this->getUserData());
+    }
+
+    private function getAdminData()
+    {
+        // Fetch admin-specific data
+        return [];
+    }
+
+    private function getUserData()
     {
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
@@ -61,15 +76,35 @@ class PrivatePageController extends Controller
         $dashboardData['transactions'] = $transactions;
         $dashboardData['average_bidding'] = $monthlyBids->avg('average_bidding');
 
-        return $this->renderPage('Private/Dashboard/users/analytics/page', $dashboardData);
+        return $dashboardData;
+    }
+
+    public function redirectToDashboard()
+    {
+        $role = Auth::user()->is_admin ? 'admin' : 'user';
+
+        return $role === 'admin'
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('user.dashboard');
+    }
+
+    public function userManagementDashboard()
+    {
+        return $this->renderPage('Private/Dashboard/admin/user-management');
+    }
+
+    public function carManagementDashboard()
+    {
+        return $this->renderPage('Private/Dashboard/admin/car-management');
     }
 
     public function salesDashboard()
     {
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
-
+        $transactions = $this->dashboardService->getUserCarsWithTransactionsTwo();
         $dashboardData = $this->dashboardService->getDashboardData($role);
+        $dashboardData['transactions'] = $transactions;
 
         return $this->renderPage('Private/Dashboard/users/analytics/sales', $dashboardData);
     }
@@ -93,6 +128,27 @@ class PrivatePageController extends Controller
         return $this->renderPage('Private/Dashboard/users/cars/sell', $dashboardData);
     }
 
+    public function editCarDashboard($id)
+    {
+        $user = Auth::user();
+        $role = $user->is_admin ? 'admin' : 'user';
+        $userData = User::with('profile')->findOrFail($user->id);
+        $brands = Brand::all();
+
+        $fuels = Fuel::all();
+        $currentCar = Car::with(['brand', 'fuel'])->findOrFail($id);
+
+        // Add data to the dashboard
+        $dashboardData = $this->dashboardService->getDashboardData($role);
+        $dashboardData['user'] = $userData;
+        $dashboardData['brands'] = $brands;
+        $dashboardData['fuels'] = $fuels;
+        $dashboardData['currentCar'] = $currentCar; // Pass the current car data
+
+        return $this->renderPage('Private/Dashboard/users/cars/edit', $dashboardData);
+    }
+
+
     public function biddingCarDashboard()
     {
         $user = Auth::user();
@@ -109,6 +165,10 @@ class PrivatePageController extends Controller
         $cars = $this->dashboardService->getUserCars()->paginate(15);;
 
         $dashboardData = $this->dashboardService->getDashboardData($role);
+        // Add images to cars
+        foreach ($cars->items() as $car) {
+            $car->image = $car->image ? asset('storage/' . $car->image) : null;
+        }
         $dashboardData['cars'] = $cars;
 
         return $this->renderPage('Private/Dashboard/users/cars/carlist', $dashboardData);

@@ -78,12 +78,6 @@ export function NavUser({
                                     Account
                                 </DropdownMenuItem>
                             </div>
-                            <div onClick={() => console.log("Notifications clicked")}>
-                                <DropdownMenuItem>
-                                    <Bell />
-                                    Notifications
-                                </DropdownMenuItem>
-                            </div>
                         </DropdownMenuGroup>
 
                         <DropdownMenuSeparator />

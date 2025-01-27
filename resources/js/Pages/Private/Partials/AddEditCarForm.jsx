@@ -3,16 +3,18 @@ import InputLabel from '@/components/InputLabel';
 import TextInput from '@/components/TextInput';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { handleFormSubmit } from '@/lib/utils';
 import { Alert } from '@/components/ui/alert';
+import { useEffect, useState } from 'react';
+import { MoveLeft } from 'lucide-react';
 
 export default function CarForm({ brands, fuels, car = null, className = '', otherCars = [], user }) {
     const {
         data,
         setData,
         post,
-        put,
+        patch,
         processing,
         errors,
         reset,
@@ -26,55 +28,72 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
         mileage: car?.mileage || '',
         dealer_name: car?.dealer_name || user?.name || '',
         dealer_location: car?.dealer_location || user?.profile.address || '',
+        image: car?.image || '',
+        price_category: '',
     });
-    const [alert, setAlert] = useState(null); // Manage alert state
+    const [alert, setAlert] = useState(null);
 
-    // Handle the form submission (either update or create)
     const handleSubmit = () => {
         handleFormSubmit({
             data,
-            model: 'cars',
+            model: car ? 'car' : 'cars',
             instance: car,
-            actions: { post, put },
+            actions: { post, patch },
             reset,
             clearErrors,
-            setAlert, // Pass setAlert to handle alert messages
+            setAlert: (newAlert) => {
+                setAlert(newAlert);
+                setTimeout(() => setAlert(null), 5000);
+            },
         });
     };
 
 
-    // Calculate the fair deal status based on the average price of same model cars
-    const calculateFairDeal = () => {
-        const sameModelCars = otherCars.filter(
-            (otherCar) =>
-                otherCar.model === data.model && otherCar.brand_id === data.brand_id
-        );
-        if (sameModelCars.length === 0) return null;
+    useEffect(() => {
+        const calculateFairDeal = () => {
+            const sameModelCars = otherCars.filter(
+                (otherCar) =>
+                    otherCar.model === data.model && otherCar.brand_id === data.brand_id
+            );
+            if (sameModelCars.length === 0) return 'Fair Deal';
 
-        const avgPrice = sameModelCars.reduce((sum, car) => sum + car.price, 0) / sameModelCars.length;
+            const avgPrice = sameModelCars.reduce((sum, car) => sum + car.price, 0) / sameModelCars.length;
 
-        if (data.price) {
-            const priceDiff = data.price - avgPrice;
-            if (Math.abs(priceDiff) <= avgPrice * 0.1) {
-                return 'Fair Deal';
-            } else if (priceDiff < 0) {
-                return 'Underpriced';
-            } else {
-                return 'Overpriced';
+            if (data.price) {
+                const priceDiff = data.price - avgPrice;
+                if (Math.abs(priceDiff) <= avgPrice * 0.1) {
+                    return 'Fair Deal';
+                } else if (priceDiff < 0) {
+                    return 'Underpriced';
+                } else {
+                    return 'Overpriced';
+                }
             }
-        }
-        return null;
-    };
+            return 'Fair Deal';
+        };
 
-    // Get the fair deal status
-    const fairDealStatus = calculateFairDeal();
+        const price_category = calculateFairDeal();
+        setData('price_category', price_category);
+    }, [data.model, data.brand_id, data.price]);
 
     return (
         <section className={`space-y-6 ${className}`}>
-            {alert && <Alert variant={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
+            {alert && (
+                <Alert variant={alert.type} className="mb-4">
+                    {alert.message}
+                </Alert>
+            )}
             <header>
-                <h2 className="text-xl font-bold rubik text-primary-foreground">
-                    {car ? 'Edit Car' : 'Add New Car'}
+                <h2 className="text-xl font-bold rubik text-primary">
+
+                    {car ? (
+                        <div className='flex gap-5 items-center'>
+                            <Button variant="link" className="text-primary" onClick={() => router.visit(route('car-list-dashboard'))}>
+                                <MoveLeft /> Go Back
+                            </Button>
+                            <div>Edit Car</div>
+                        </div>
+                    ) : 'Add New Car'}
                 </h2>
             </header>
 
@@ -154,6 +173,19 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                 </div>
 
                 <div>
+                    <InputLabel htmlFor="image" value="Car Image Upload" />
+                    <TextInput
+                        id="image"
+                        name="image"
+                        type="file"
+                        onChange={(e) => setData('image', e.target.files[0])}
+                        className="focus:ring-0"
+                    />
+                    <InputError message={errors.image} />
+                </div>
+
+
+                <div>
                     <InputLabel htmlFor="fuel_id" value="Fuel Type" />
                     <Select
                         onValueChange={(value) => setData('fuel_id', value)}
@@ -201,8 +233,8 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
             </div>
 
             <div className="mt-4">
-                <p className="text-primary-foreground">
-                    Deal Status: <span className="font-bold">{fairDealStatus || 'N/A'}</span>
+                <p className="text-primary">
+                    Deal Status: <span className="font-bold">{data.price_category || 'Fair Deal'}</span>
                 </p>
             </div>
 
@@ -211,7 +243,7 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                     Reset
                 </Button>
                 <Button
-                    variant="primary"
+                    variant="default"
                     onClick={handleSubmit}
                     disabled={processing}
                 >

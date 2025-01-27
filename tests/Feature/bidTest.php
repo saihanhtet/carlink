@@ -25,14 +25,12 @@ test('user can place a bid', function () {
             'bid_price' => 15000,
         ]);
 
-    $response->assertStatus(201);
-    $response->assertJson([
-        'message' => 'Bid placed successfully.',
-        'bid' => [
-            'car_id' => $car->id,
-            'user_id' => $user->id,
-            'bid_price' => 15000,
-        ],
+    $response->assertSessionHasNoErrors()
+        ->assertRedirect("/car-details/{$car->id}");
+    // Check that the bid was stored in the database
+    $this->assertDatabaseHas('bids', [
+        'car_id' => $car->id,
+        'bid_price' => 15000,
     ]);
 });
 
