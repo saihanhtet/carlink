@@ -9,6 +9,7 @@ use App\Models\Bid;
 use App\Models\Brand;
 use App\Models\Profile;
 use App\Models\Appointment;
+use App\Models\Engine;
 use App\Models\Fuel;
 use App\Models\Transaction;
 use Faker\Factory as Faker;
@@ -30,11 +31,19 @@ class DatabaseSeeder extends Seeder
         )->create();
 
         Fuel::factory()->count(5)->sequence(
-            ['name' => 'Gasoline (Petrol)'],
+            ['name' => 'Petrol'],
             ['name' => 'Diesel'],
             ['name' => 'Electric'],
             ['name' => 'Hybrid'],
             ['name' => 'Hydrogen']
+        )->create();
+
+        Engine::factory()->count(5)->sequence(
+            ['name' => '1.8L'],
+            ['name' => '2.0L Turbo'],
+            ['name' => 'Electric'],
+            ['name' => '5.0L V8'],
+            ['name' => '3.0L Turbo']
         )->create();
 
         // Create an admin user
@@ -74,8 +83,6 @@ class DatabaseSeeder extends Seeder
                 ->setTime(12, 0, 0) // Set to noon
                 ->format('Y-m-d H:i:s');
 
-
-            $endDayDate = Carbon::parse($previousDayDate)->copy()->addDays(7);
             $appointmentDate = null;
             if ($index === 0) {
                 $car->update(['created_at' => $previousMonthDate, 'updated_at' => $previousMonthDate]);
@@ -110,6 +117,8 @@ class DatabaseSeeder extends Seeder
                 $this->handleBidsAndTransactions($car, $faker, $previousMonthDate, $previousDayDate);
             }
         });
+
+        echo $randomUsers[0]->email;
     }
 
     /**
@@ -120,44 +129,60 @@ class DatabaseSeeder extends Seeder
         $carOptions = [
             [
                 'brand_id' => Brand::where('name', 'Toyota')->first()->id,
-                'model' => 'Corolla',
-                'fuel_id' => Fuel::where('name', 'Diesel')->first()->id,
-                'registration_year' => 2018,
+                'fuel_id' => Fuel::where('name', 'Petrol')->first()->id,
+                'engine_id' => Engine::where('name', '1.8L')->first()->id,
+
+                'model' => 'Corolla Altis',
+                'registration_year' => 2021,
                 'price' => 15000.00,
-                'mileage' => 40000,
+                'mileage' => 30000,
+                'image' => 'cars_images/001.png',
+                'transmission' => 'Automatic',
+                'seats' => 5,
+                'description' => 'Reliable sedan with excellent fuel economy.',
                 'dealer_name' => 'John\'s Autos',
                 'dealer_location' => 'Los Angeles, CA',
+
                 'price_category' => 'Good Deal',
-                'image' => 'cars_images/001.png',
-                'status' => 'open',
                 'user_id' => $user->id,
             ],
             [
                 'brand_id' => Brand::where('name', 'Honda')->first()->id,
-                'model' => 'Civic',
-                'fuel_id' => Fuel::where('name', 'Gasoline (Petrol)')->first()->id,
-                'registration_year' => 2020,
-                'price' => 20000.00,
-                'mileage' => 25000,
-                'dealer_name' => 'Elite Cars',
-                'dealer_location' => 'New York, NY',
-                'price_category' => 'Fair Deal',
-                'image' => 'cars_images/002.png',
-                'status' => 'open',
+                'fuel_id' => Fuel::where('name', 'Petrol')->first()->id,
+                'engine_id' => Engine::where('name', '2.0L Turbo')->first()->id,
+
+                'model' => 'Civic Type R',
+                'registration_year' => 2022,
+                'price' => 38000.00,
+                'mileage' => 12000,
+                'image' => 'cars_images/001.png',
+                'transmission' => 'Manual',
+                'seats' => 5,
+                'description' => 'Sporty hatchback with cutting-edge design.',
+                'dealer_name' => 'John\'s Autos',
+                'dealer_location' => 'Los Angeles, CA',
+
+                'price_category' => 'Good Deal',
                 'user_id' => $user->id,
             ],
             [
                 'brand_id' => Brand::where('name', 'Ford')->first()->id,
-                'model' => 'Focus',
-                'fuel_id' => Fuel::where('name', 'Hybrid')->first()->id,
-                'registration_year' => 2019,
-                'price' => 18000.00,
-                'mileage' => 30000,
+                'fuel_id' => Fuel::where('name', 'Petrol')->first()->id,
+                'engine_id' => Engine::where('name', '2.0L Turbo')->first()->id,
+
+                'model' => 'Mustang GT',
+                'registration_year' => 2020,
+                'price' => 45000.00,
+                'mileage' => 25000,
+                'image' => 'cars_images/001.png',
+                'transmission' => 'Manual',
+                'seats' => 4,
+                'description' => 'Sporty hatchback with cutting-edge design.',
+
                 'dealer_name' => 'City Motors',
                 'dealer_location' => 'Chicago, IL',
+
                 'price_category' => 'Fair Deal',
-                'image' => 'cars_images/003.png',
-                'status' => 'open',
                 'user_id' => $user->id,
             ],
         ];

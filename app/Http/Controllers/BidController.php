@@ -6,6 +6,7 @@ use App\Models\Bid;
 use App\Models\Car;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class BidController extends Controller
@@ -34,7 +35,7 @@ class BidController extends Controller
         $car = Car::findOrFail($validated['car_id']);
 
         // Check if the authenticated user is the owner of the car
-        if ($car->user_id === auth()->id()) {
+        if ($car->user_id === Auth::id()) {
             return back()->withErrors(['bid_price' => 'You cannot place a bid on your own car.']);
         }
 
@@ -50,7 +51,7 @@ class BidController extends Controller
         Bid::create([
             'car_id' => $validated['car_id'],
             'bid_price' => $validated['bid_price'],
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
         ]);
 
         // Redirect to the car details page

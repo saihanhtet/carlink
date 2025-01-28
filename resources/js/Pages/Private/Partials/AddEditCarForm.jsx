@@ -9,7 +9,7 @@ import { Alert } from '@/components/ui/alert';
 import { useEffect, useState } from 'react';
 import { MoveLeft } from 'lucide-react';
 
-export default function CarForm({ brands, fuels, car = null, className = '', otherCars = [], user }) {
+export default function CarForm({ brands, fuels, engines, car = null, className = '', otherCars = [], user }) {
     const {
         data,
         setData,
@@ -22,13 +22,17 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
     } = useForm({
         brand_id: car?.brand_id || '',
         fuel_id: car?.fuel_id || '',
+        engine_id: car?.engine_id || '',
         model: car?.model || '',
         registration_year: car?.registration_year || '',
         price: car?.price || '',
         mileage: car?.mileage || '',
+        image: car?.image || '',
+        seats: car?.seats || '',
+        transmission: car?.transmission || '',
+        description: car?.description || '',
         dealer_name: car?.dealer_name || user?.name || '',
         dealer_location: car?.dealer_location || user?.profile.address || '',
-        image: car?.image || '',
         price_category: '',
     });
     const [alert, setAlert] = useState(null);
@@ -69,7 +73,7 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                     return 'Overpriced';
                 }
             }
-            return 'Fair Deal';
+            return 'Not Available';
         };
 
         const price_category = calculateFairDeal();
@@ -153,6 +157,53 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                 </div>
 
                 <div>
+                    <InputLabel htmlFor="seats" value="Car Seats Amount" />
+                    <TextInput
+                        id="seats"
+                        type="number"
+                        value={data.seats}
+                        onChange={(e) =>
+                            setData('seats', e.target.value)
+                        }
+                        placeholder="Enter seats amount of your car"
+                        className='focus:ring-0'
+                    />
+                    <InputError message={errors.seats} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="description" value="Car Description" />
+                    <TextInput
+                        id="description"
+                        type="text"
+                        value={data.description}
+                        onChange={(e) =>
+                            setData('description', e.target.value)
+                        }
+                        placeholder=""
+                        className='focus:ring-0 h-48'
+                    />
+                    <InputError message={errors.description} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="transmission" value="Transmission" />
+                    <Select
+                        onValueChange={(value) => setData('transmission', value)}
+                        value={data.transmission}
+                    >
+                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                            <SelectValue placeholder="Select a Brand" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem key={1} value={'Automatic'}>Automatic</SelectItem>
+                            <SelectItem key={2} value={'Manual'}>Manual</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.transmission} />
+                </div>
+
+                <div>
                     <InputLabel htmlFor="brand_id" value="Brand" />
                     <Select
                         onValueChange={(value) => setData('brand_id', value)}
@@ -173,19 +224,6 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="image" value="Car Image Upload" />
-                    <TextInput
-                        id="image"
-                        name="image"
-                        type="file"
-                        onChange={(e) => setData('image', e.target.files[0])}
-                        className="focus:ring-0"
-                    />
-                    <InputError message={errors.image} />
-                </div>
-
-
-                <div>
                     <InputLabel htmlFor="fuel_id" value="Fuel Type" />
                     <Select
                         onValueChange={(value) => setData('fuel_id', value)}
@@ -204,6 +242,38 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
                     </Select>
                     <InputError message={errors.fuel_id} />
                 </div>
+
+                <div>
+                    <InputLabel htmlFor="engine_id" value="Engine Type" />
+                    <Select
+                        onValueChange={(value) => setData('engine_id', value)}
+                        value={data.engine_id}
+                    >
+                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                            <SelectValue placeholder="Select a Engine Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {engines.map((engine) => (
+                                <SelectItem key={engine.id} value={engine.id}>
+                                    {engine.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.engine} />
+                </div>
+            </div>
+
+            <div>
+                <InputLabel htmlFor="image" value="Car Image Upload" />
+                <TextInput
+                    id="image"
+                    name="image"
+                    type="file"
+                    onChange={(e) => setData('image', e.target.files[0])}
+                    className="focus:ring-0"
+                />
+                <InputError message={errors.image} />
             </div>
 
             <div>
@@ -234,7 +304,7 @@ export default function CarForm({ brands, fuels, car = null, className = '', oth
 
             <div className="mt-4">
                 <p className="text-primary">
-                    Deal Status: <span className="font-bold">{data.price_category || 'Fair Deal'}</span>
+                    Deal Status: <span className="font-bold">{data.price_category || 'Not Available'}</span>
                 </p>
             </div>
 

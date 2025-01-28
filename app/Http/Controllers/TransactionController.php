@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Car;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -37,7 +38,7 @@ class TransactionController extends Controller
         ]);
 
         // Store the transaction
-        $transaction = Transaction::create(array_merge($request->all(), ['buyer_id' => auth()->id()]));
+        $transaction = Transaction::create(array_merge($request->all(), ['buyer_id' => Auth::id()]));
 
         return response()->json([
             'message' => 'Transaction recorded successfully.',

@@ -9,11 +9,11 @@ const SellMyCarDashboard = () => {
         { name: "Sell your car", link: route("car-upload-dashboard") },
     ];
 
-    const { brands, fuels, cars, user } = usePage().props;
+    const { brands, fuels, engines, cars, user } = usePage().props;
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
-            <CarForm brands={brands} fuels={fuels} otherCars={cars} user={user} />
+            <CarForm brands={brands} fuels={fuels} engines={engines} otherCars={cars} user={user} />
         </AuthenticatedLayout>
     )
 }

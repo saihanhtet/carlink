@@ -7,6 +7,7 @@ use App\Http\Services\BidStatisticsService as ServicesBidStatisticsService;
 use App\Http\Services\DashboardService as ServicesDashboardService;
 use App\Models\Brand;
 use App\Models\Car;
+use App\Models\Engine;
 use App\Models\Fuel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -140,7 +141,8 @@ class PrivatePageController extends Controller
         $userData = User::with('profile')->findOrFail($user->id);
         $brands = Brand::all();
         $fuels = Fuel::all();
-        $cars = Car::with(['brand', 'fuel'])->get();
+        $engines = Engine::all();
+        $cars = Car::with(['brand', 'fuel', 'engine'])->get();
 
         // adding data
         $dashboardData = $this->dashboardService->getDashboardData($role);
@@ -148,6 +150,7 @@ class PrivatePageController extends Controller
         $dashboardData['brands'] = $brands;
         $dashboardData['fuels'] = $fuels;
         $dashboardData['cars'] = $cars;
+        $dashboardData['engines'] = $engines;
 
         return $this->renderPage('Private/Dashboard/users/cars/sell', $dashboardData);
     }

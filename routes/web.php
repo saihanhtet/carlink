@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\EngineController;
+use App\Http\Controllers\FuelController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ProfileController;
 // Pages controller import
@@ -37,6 +39,8 @@ Route::middleware(['auth', 'verified', IsAdminMiddleware::class])->group(functio
 
 // Authenticated Routes
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard Routes
     Route::get('/dashboard/analytics/dashboard', [PrivatePageController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/analytics/car-sales', [PrivatePageController::class, 'salesDashboard'])->name('car-sales-dashboard');
     Route::get('/dashboard/cars/car-upload', [PrivatePageController::class, 'uploadCarDashboard'])->name('car-upload-dashboard');
@@ -45,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cars/carlist', [PrivatePageController::class, 'carListDashboard'])->name('car-list-dashboard');
     Route::get('/dashboard/cars/car-status', [PrivatePageController::class, 'carStatusDashboard'])->name('car-status-dashboard');
 
+    // Car Management
     Route::post('/cars/store', [CarController::class, 'store'])->name('car.store');
     Route::patch('/cars/{car}/update', [CarController::class, 'update'])->name('car.update');
     Route::delete('/cars/{car}/delete', [CarController::class, 'destroy'])->name('car.destroy');
@@ -54,13 +59,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/dashboard/settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/dashboard/settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Resources Routes
-    //Route::resource('/bids', BidController::class);
+    // Bid Management
     Route::post('/bids', [BidController::class, 'store'])->name('bid.store');
 
+    // Resources Routes
     Route::resource('/appointments', AppointmentController::class);
     Route::resource('/transactions', TransactionController::class);
 
+    // Fuel Management
+    Route::get('/fuels', [FuelController::class, 'index'])->name('fuels.index');
+    Route::post('/fuels', [FuelController::class, 'store'])->name('fuels.store');
+    Route::put('/fuels/{fuel}', [FuelController::class, 'update'])->name('fuels.update');
+    Route::delete('/fuels/{fuel}', [FuelController::class, 'destroy'])->name('fuels.delete');
+
+    // Engine Management
+    Route::get('/engines', [EngineController::class, 'index'])->name('engines.index');
+    Route::post('/engines', [EngineController::class, 'store'])->name('engines.store');
+    Route::put('/engines/{engine}', [EngineController::class, 'update'])->name('engines.update');
+    Route::delete('/engines/{engine}', [EngineController::class, 'destroy'])->name('engines.delete');
 });
 
 

@@ -18,8 +18,43 @@ import { handleFormSubmit } from '@/lib/utils';
 import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 
+const PlaceBidButton = ({ dialogOpen, setDialogOpen, data, car, setData, errors, handleSubmit }) => {
+    return (
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+                <Button className="md:max-w-[250px] w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold uppercase">
+                    Place a Bid
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Place a Bid for {car.model}</DialogTitle>
+                </DialogHeader>
+                <div className="mt-4">
+                    <InputLabel htmlFor="bid_price" value="Bidding amount" />
+                    <TextInput
+                        id="bid_price"
+                        type="number"
+                        value={data.bid_price}
+                        onChange={(e) => setData('bid_price', e.target.value)}
+                        placeholder="Enter your Bidding amount"
+                        className="focus:ring-0"
+                    />
+                    <InputError message={errors.bid_price} />
+                    <Button
+                        className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white"
+                        onClick={handleSubmit}
+                    >
+                        Place Bid
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
-    const { car, currentBid, highestBid, lastBid, user, bidable } = usePage().props;
+    const { car, currentBid, highestBid, lastBid, user, bidable, isOwner } = usePage().props;
     const [alert, setAlert] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const {
@@ -44,6 +79,9 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
             setAlert: (newAlert) => {
                 setAlert(newAlert);
                 setTimeout(() => setAlert(null), 5000);
+            },
+            onSuccess: () => {
+                setDialogOpen(false); // Close the dialog
             },
         });
     };
@@ -91,49 +129,26 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                             <span className="font-semibold">Original Price:</span>{' '}
                             <span className='font-bold'>${car.price || ''}</span>
                         </p>
-                        <Separator className="my-3" />
+                        <Separator className="my-5" />
                         {!user && (<div className="flex flex-wrap w-full justify-center items-center">
                             <Button
-                                className="mt-4 w-full"
-                                variant='default'
+                                className="w-full font-semibold text-white capitalize bg-blue-500 hover:bg-blue-600"
                                 onClick={() => router.visit(route('login'))}
                             >
                                 Please log in first!
                             </Button>
                         </div>)}
-                        {bidable ? (<div className="flex flex-wrap justify-between w-full gap-3">
+                        {bidable && (<div className="flex flex-wrap justify-between w-full gap-3">
                             {/* Bid Button */}
-                            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                                <DialogTrigger asChild>
-                                    <Button className="md:max-w-[250px] w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold uppercase">
-                                        Place a Bid
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[500px]">
-                                    <DialogHeader>
-                                        <DialogTitle>Place a Bid for {car.model}</DialogTitle>
-                                    </DialogHeader>
-                                    <div className="mt-4">
-                                        <InputLabel htmlFor="bid_price" value="Bidding amount" />
-                                        <TextInput
-                                            id="bid_price"
-                                            type="number"
-                                            value={data.bid_price}
-                                            onChange={(e) => setData('bid_price', e.target.value)}
-                                            placeholder="Enter your Bidding amount"
-                                            className='focus:ring-0'
-                                        />
-                                        <InputError message={errors.bid_price} />
-                                        <Button
-                                            className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white"
-                                            onClick={handleSubmit}
-                                        >
-                                            Place Bid
-                                        </Button>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-
+                            <PlaceBidButton
+                                dialogOpen={dialogOpen}
+                                setDialogOpen={setDialogOpen}
+                                data={data}
+                                car={car}
+                                setData={setData}
+                                errors={errors}
+                                handleSubmit={handleSubmit}
+                            />
                             {/* View All Bids Button */}
                             <Dialog>
                                 <DialogTrigger asChild>
@@ -169,10 +184,11 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                                     </div>
                                 </DialogContent>
                             </Dialog>
-                        </div>) : (
-                            <p className="text-muted-foreground">You cannot bid you are the car owner.</p>
+                        </div>)}
+                        {isOwner && (
+                            <p className="text-red-400 font-semibold">You cannot bid you are the car owner.</p>
                         )}
-                        <Separator className="my-3" />
+                        <Separator className="my-5" />
                         <div>
                             <h2 className="text-xl font-bold mb-4">Bid Information</h2>
                             {/* Bidding Details */}
@@ -198,6 +214,8 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                 {/* Full Width Section: Car and User Details */}
                 <div className="col-span-2 bg-gray-50 mt-8 p-6 rounded-md shadow-md">
                     <h2 className="text-xl font-bold mb-4">Additional Details</h2>
+                    <p className="text-lg font-semibold">{car.description}</p>
+                    <Separator className="my-5" />
                     {/* Car Details */}
                     <div className="mb-4">
                         <h3 className="text-lg font-semibold">Car Specifications</h3>
@@ -208,7 +226,7 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                             <span className="font-semibold">Seats:</span> {car.seats || ''}
                         </p>
                         <p className="text-gray-600">
-                            <span className="font-semibold">Engine:</span> {car.engine || ''}
+                            <span className="font-semibold">Engine:</span> {car.engine.name || ''}
                         </p>
                     </div>
                     <Separator className='my-4' />

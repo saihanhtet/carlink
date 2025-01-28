@@ -10,19 +10,23 @@ class Car extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'brand_id',
         'fuel_id',
-        'user_id',
-        'make',
+        'engine_id',
         'model',
         'registration_year',
         'price',
         'mileage',
+        'image',
+        'transmission',
+        'seats',
+        'description',
         'dealer_name',
         'dealer_location',
         'price_category',
-        'image',
-        'status',
+        'car_status',
+        'bid_status',
         'created_at',
         'updated_at'
     ];
@@ -57,5 +61,11 @@ class Car extends Model
     {
         return $this->belongsTo(Fuel::class);
     }
+
+    public function engine()
+    {
+        return $this->belongsTo(Engine::class);
+    }
+
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Car;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -27,7 +28,7 @@ class AppointmentController extends Controller
             'appointment_date' => 'required|date|after_or_equal:today',
         ]);
 
-        Appointment::create(array_merge($request->all(), ['user_id' => auth()->id(), 'status' => 'pending']));
+        Appointment::create(array_merge($request->all(), ['user_id' => Auth::id(), 'status' => 'pending']));
 
         return redirect()->route('appointments.index')->with('success', 'Appointment created successfully.');
     }

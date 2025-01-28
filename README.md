@@ -1,66 +1,21 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+### Installation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+---
+#### Sample Data
+10 unique cars showcasing diverse specifications:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| **Car Brand**  | **Car Model**     | **Mileage** | **Registered Year** | **Price**   | **Fuel**    | **Transmission** | **Seats** | **Engine**   | **Description**                               | **Status**     |
+|-----------------|-------------------|-------------|----------------------|-------------|-------------|------------------|-----------|--------------|-------------------------------------------------|----------------|
+| Toyota         | Corolla Altis     | 30,000 km   | 2021                 | $20,000     | Petrol      | Automatic        | 5         | 1.8L         | Reliable sedan with excellent fuel economy.    | Available      |
+| Honda          | Civic Type R      | 12,000 km   | 2022                 | $38,000     | Petrol      | Manual           | 5         | 2.0L Turbo   | Sporty hatchback with cutting-edge design.      | Available      |
+| Tesla          | Model 3           | 10,000 km   | 2023                 | $50,000     | Electric    | Automatic        | 5         | Electric     | Affordable electric car with autopilot.        | Available      |
+| Ford           | Mustang GT        | 25,000 km   | 2020                 | $45,000     | Petrol      | Automatic        | 4         | 5.0L V8      | Iconic muscle car with thrilling performance.   | Available      |
+| BMW            | X5 xDrive40i      | 35,000 km   | 2021                 | $60,000     | Petrol      | Automatic        | 5         | 3.0L Turbo   | Luxury SUV with powerful engine and comfort.    | Sold           |
+| Hyundai        | Tucson            | 18,000 km   | 2022                 | $28,000     | Diesel      | Automatic        | 5         | 2.0L Diesel  | Versatile SUV ideal for families.              | Available      |
+| Mercedes-Benz  | C-Class C300      | 20,000 km   | 2021                 | $55,000     | Petrol      | Automatic        | 5         | 2.0L Turbo   | Luxury sedan with elegant design and features.  | Reserved       |
+| Jeep           | Wrangler Rubicon  | 40,000 km   | 2019                 | $48,000     | Petrol      | Manual           | 5         | 3.6L V6      | Rugged off-roader for adventure enthusiasts.    | Available      |
+| Audi           | Q7                | 22,000 km   | 2022                 | $70,000     | Diesel      | Automatic        | 7         | 3.0L Diesel  | Premium 7-seater SUV with cutting-edge tech.    | Available      |
+| Nissan         | Leaf              | 15,000 km   | 2022                 | $25,000     | Electric    | Automatic        | 5         | Electric     | Affordable EV with excellent range and comfort. | Available      |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---

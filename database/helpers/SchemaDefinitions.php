@@ -43,21 +43,37 @@ class SchemaDefinitions
         $table->timestamps();
     }
 
+    public static function carEnginesTable(Blueprint $table)
+    {
+        $table->id();
+        $table->string('name')->unique();
+        $table->timestamps();
+    }
+
     public static function carsTable(Blueprint $table)
     {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
         $table->foreignId('fuel_id')->constrained('fuels')->onDelete('cascade');
+        $table->foreignId('engine_id')->constrained('engines')->onDelete('cascade');
+
         $table->string('model');
         $table->integer('registration_year');
         $table->decimal('price', 10, 2);
         $table->integer('mileage');
+        $table->string('image')->nullable();
+        $table->string('transmission')->nullable();
+        $table->unsignedTinyInteger('seats');
+        $table->text('description')->nullable();
+
         $table->string('dealer_name')->nullable();
         $table->string('dealer_location')->nullable();
-        $table->enum('price_category', ['Good Deal', 'Fair Deal', 'Overpriced', 'Underpriced'])->nullable();
-        $table->string('image')->nullable();
-        $table->enum('status', ['open', 'close'])->default('open');
+
+        $table->enum('price_category', ['Not Available', 'Good Deal', 'Fair Deal', 'Overpriced', 'Underpriced'])->nullable();
+
+        $table->enum('car_status', ['available', 'sold'])->default('available');
+        $table->enum('bid_status', ['open', 'close'])->default('open');
         $table->timestamps();
     }
 

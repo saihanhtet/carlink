@@ -15,9 +15,10 @@ use Illuminate\Http\Request;
 class PublicPageController extends Controller
 {
     /**
-     * Render a public page dynamically.
+     * Render a public page with dynamic data.
      *
-     * @param string $view
+     * @param string $view The view to render.
+     * @param array $data Additional data for the view.
      * @return \Inertia\Response
      */
     public function renderPage(string $view, $data = [])
@@ -50,44 +51,56 @@ class PublicPageController extends Controller
         return $this->renderPage('Public/ContactUsPage/page');
     }
 
+    /**
+     * Display detailed information about a specific car.
+     *
+     * @param int $id The ID of the car.
+     * @return \Inertia\Response
+     */
     public function carDetailsPage($id)
     {
-        // Fetch the car with its related brand, fuel, and owner
         $currentCar = Car::with(['brand', 'fuel', 'user'])->findOrFail($id);
         $currentCar->image = $currentCar->image ? asset('storage/' . $currentCar->image) : null;
 
-        // Fetch bids for the current car
         $currentBids = Bid::with('user')->where('car_id', $id)->get();
         $highestBid = $currentBids->max('bid_price');
         $lastBid = $currentBids->last();
 
-        // Determine if the user can bid
-        $user = auth()->user(); // Get the authenticated user
-        $bidable = $user->id !== $currentCar->user_id; // Check if user is authenticated and not the car owner
+        $bidable = false;
+        $isOwner = false;
+        $user = null;
 
-        // Prepare the data to be passed to the view
+        if (Auth::check()) {
+            $user = Auth::user();
+            $isOwner = $user->id === $currentCar->user_id;
+            $bidable = $user->id !== $currentCar->user_id;
+        }
+
         $data = [
             'car' => $currentCar,
             'currentBid' => $currentBids,
             'highestBid' => $highestBid,
             'lastBid' => $lastBid,
             'user' => $user,
-            'bidable' => $bidable, // Pass the bidable status to the view
+            'isOwner' => $isOwner,
+            'bidable' => $bidable,
         ];
 
         return $this->renderPage('Public/CarListingsPage/details', $data);
     }
 
-
+    /**
+     * Display a list of cars with optional filters.
+     *
+     * @param Request $request The HTTP request object.
+     * @return \Inertia\Response
+     */
     public function carListing(Request $request)
     {
         $query = Car::with(['brand', 'fuel']);
 
-        // Check if "clear" action is requested
         if ($request->input('clearFilters') === 'true') {
-            // Return all cars with no filters applied
             $cars = $query->paginate(15);
-
             $brands = Brand::all();
             $fuels = Fuel::all();
 
@@ -95,13 +108,12 @@ class PublicPageController extends Controller
                 'cars' => $cars,
                 'brands' => $brands,
                 'fuels' => $fuels,
-                'selectedFilters' => [], // Clear all selected filters
+                'selectedFilters' => [],
                 'isFilterActive' => false,
                 'status' => 'All cars are displayed.',
             ]);
         }
 
-        // Otherwise, process selected filters
         $selectedFilters = [
             'brands' => $request->input('brands') ? explode(',', $request->input('brands')) : [],
             'fuels' => $request->input('fuels') ? explode(',', $request->input('fuels')) : [],
@@ -111,17 +123,13 @@ class PublicPageController extends Controller
             'yearEnd' => $request->input('yearEnd'),
         ];
 
-        // Apply reusable query filter logic
         $this->applyFilters($query, $selectedFilters);
 
-        // Paginate results
         $cars = $query->paginate(15);
-
         $status = $cars->isEmpty()
             ? 'No cars found matching your filters. Please adjust your search criteria.'
             : 'Cars found matching your filters.';
 
-        // Add images to cars
         foreach ($cars->items() as $car) {
             $car->image = $car->image ? asset('storage/' . $car->image) : null;
         }
@@ -140,53 +148,46 @@ class PublicPageController extends Controller
     }
 
     /**
-     * Apply filters dynamically to the query based on selected filters.
+     * Apply filters to the car query based on user input.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $filters
-     * @return void
+     * @param \Illuminate\Database\Eloquent\Builder $query The car query.
+     * @param array $filters The filters to apply.
      */
     private function applyFilters(&$query, array $filters)
     {
-        // Filter by brand names
         if (!empty($filters['brands'])) {
             $query->whereHas('brand', function ($subQuery) use ($filters) {
                 $subQuery->whereIn('name', $filters['brands']);
             });
         }
 
-        // Filter by fuel types
         if (!empty($filters['fuels'])) {
             $query->whereHas('fuel', function ($subQuery) use ($filters) {
                 $subQuery->whereIn('name', $filters['fuels']);
             });
         }
 
-        // Filter by minimum price
         if (!empty($filters['priceMin'])) {
             $query->where('price', '>=', $filters['priceMin']);
         }
 
-        // Filter by maximum price
         if (!empty($filters['priceMax'])) {
             $query->where('price', '<=', $filters['priceMax']);
         }
 
-        // Filter by start year
         if (!empty($filters['yearStart'])) {
             $query->where('registration_year', '>=', $filters['yearStart']);
         }
 
-        // Filter by end year
         if (!empty($filters['yearEnd'])) {
             $query->where('registration_year', '<=', $filters['yearEnd']);
         }
     }
 
     /**
-     * Determine if any filters are active.
+     * Check if any filters are active.
      *
-     * @param array $filters
+     * @param array $filters The filters to check.
      * @return bool
      */
     private function isFilterActive(array $filters)
