@@ -4,25 +4,25 @@
 
 
 :root  {
-  --background: 360 13% 95%;
-  --foreground: 360 5% 10%;
-  --card: 360 13% 90%;
-  --card-foreground: 360 5% 15%;
-  --popover: 360 13% 95%;
-  --popover-foreground: 360 95% 10%;
-  --primary: 360 60% 73%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 360 13% 70%;
+  --background: 221 13% 95%;
+  --foreground: 221 5% 10%;
+  --card: 221 13% 90%;
+  --card-foreground: 221 5% 15%;
+  --popover: 221 13% 95%;
+  --popover-foreground: 221 95% 10%;
+  --primary: 221 83.3% 53.1%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 221 13% 70%;
   --secondary-foreground: 0 0% 0%;
-  --muted: 322 13% 85%;
-  --muted-foreground: 360 5% 35%;
-  --accent: 322 13% 80%;
-  --accent-foreground: 360 5% 15%;
+  --muted: 183 13% 85%;
+  --muted-foreground: 221 5% 35%;
+  --accent: 183 13% 80%;
+  --accent-foreground: 221 5% 15%;
   --destructive: 0 50% 35%;
-  --destructive-foreground: 360 5% 90%;
-  --border: 360 20% 50%;
-  --input: 360 20% 35%;
-  --ring: 360 60% 73%;
+  --destructive-foreground: 221 5% 90%;
+  --border: 221 20% 50%;
+  --input: 221 20% 35%;
+  --ring: 221 83.3% 53.1%;
   --radius: 0.5rem;
 }
 .dashboard  {

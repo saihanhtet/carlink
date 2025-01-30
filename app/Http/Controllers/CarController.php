@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,13 @@ class CarController extends Controller
 
         // Create the car
         $car = Car::create(array_merge($validated, ['user_id' => Auth::id()]));
-
+        $appointmentDate = now()->addWeek();
+        Appointment::create([
+            'car_id' => $car->id,
+            'appointment_date' => $appointmentDate,
+            'user_id' => Auth::id(),
+            'status' => 'pending',
+        ]);
         return Redirect::route('car-upload-dashboard')->with('success', 'Car created successfully.');
     }
 
@@ -72,6 +79,27 @@ class CarController extends Controller
         return Redirect::route('car-list-dashboard')->with('success', 'Car updated successfully.');
     }
 
+    public function updateBidStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:appointments,id',
+            'action' => 'required|string|in:open,close',
+        ]);
+        $car = Car::findOrFail($validated['id']);
+        if ($validated['action'] == 'open') {
+            $car->update([
+                'car_status' => 'available',
+                'bid_status' => 'open',
+            ]);
+        } else {
+            $car->update([
+                'car_status' => 'sold',
+                'bid_status' => 'close',
+            ]);
+        }
+        return Redirect::route('car-details-page', $car->id)
+            ->with('status', 'Car Status updated successfully.');
+    }
     /**
      * Delete a car and its associated image.
      */

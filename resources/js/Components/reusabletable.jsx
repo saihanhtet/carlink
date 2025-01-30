@@ -58,15 +58,23 @@ const ReUsableTable = ({ caption, tableHeaders, tableData, className, filters, s
                             </tr>
                         </thead>
                         <tbody>
-                            {tableData.map((row, rowIndex) => (
-                                <tr key={rowIndex} className={`bg-inherit border-b dark:bg-gray-800 dark:border-gray-700 ${rowIndex % 2 === 0 ? 'bg-gray-50 dark:bg-gray-900' : ''}`}>
-                                    {row.map((cell, cellIndex) => (
-                                        <td key={cellIndex} className={`px-6 py-4 break-words ${cell.className || ''}`}>
-                                            {cell.content}
-                                        </td>
-                                    ))}
+                            {tableData.length > 0 ? (
+                                tableData.map((row, rowIndex) => (
+                                    <tr key={rowIndex} className={`bg-inherit border-b dark:bg-gray-800 dark:border-gray-700 ${rowIndex % 2 === 0 ? 'bg-gray-50 dark:bg-gray-900' : ''}`}>
+                                        {row.map((cell, cellIndex) => (
+                                            <td key={cellIndex} className={`px-6 py-4 break-words ${cell.className || ''}`}>
+                                                {cell.content}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={tableHeaders.length} className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                        No Data Available
+                                    </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

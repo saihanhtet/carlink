@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -69,7 +70,22 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'Profile updated successfully.');
     }
 
+    public function updateStatus(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:users,id',
+            'status' => 'required|string|in:active,banned',
+            'is_admin' => 'required|boolean',
+        ]);
 
+        $user = User::findOrFail($validated['id']);
+        $user->update([
+            'status' => $validated['status'],
+            'is_admin' => $validated['is_admin'],
+        ]);
+
+        return Redirect::route('user-management-dashboard')->with('status', 'User updated successfully.');
+    }
 
     /**
      * Delete the user's account.

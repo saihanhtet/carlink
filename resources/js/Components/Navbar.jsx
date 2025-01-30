@@ -37,7 +37,7 @@ const Navbar = ({ canLogin, canRegister, isLoggedIn = false }) => {
 
     return (
         <nav
-            className={`fixed top-0 left-0 w-full shadow-md z-50 transition-all duration-300 ${isHomePage && !isScrolled ? "bg-black/30 text-white" : "bg-primary/90 text-black"
+            className={`fixed top-0 left-0 w-full shadow-md z-50 transition-all duration-500 ${isHomePage && !isScrolled ? "bg-black/30 text-white" : "bg-primary text-primary-foreground"
                 }`}
         >
             <div className="container mx-auto flex justify-between items-center p-4">
@@ -109,7 +109,7 @@ const Navbar = ({ canLogin, canRegister, isLoggedIn = false }) => {
 
             {/* Mobile Menu with Blur Effect */}
             {isMenuOpen && (
-                <div className="fixed inset-0 z-40 bg-pink/50 backdrop-blur-xl">
+                <div className="fixed inset-0 z-40 bg-blue-900/60 backdrop-blur-xl">
                     <div className="p-4 absolute top-0 right-0">
                         <button
                             onClick={() => setIsMenuOpen(false)}
@@ -128,13 +128,33 @@ const Navbar = ({ canLogin, canRegister, isLoggedIn = false }) => {
                         </button>
                     </div>
                     <ul className="flex flex-col items-center justify-center h-full space-y-6 rubik">
-                        {allItems.map((item) => (
+                        {/* Regular menu items */}
+                        {menuItems.map((item) => (
                             <li key={item.name} className="text-center">
                                 <NavLink href={item.href} active={route().current(item.link)}>
                                     {item.name}
                                 </NavLink>
                             </li>
                         ))}
+
+                        {/* Show Login/Register only if user is NOT logged in, else show Dashboard */}
+                        {isLoggedIn ? (
+                            <li className="text-center">
+                                <NavLink href={route("dashboard")} active={route().current("dashboard")}>
+                                    Dashboard
+                                </NavLink>
+                            </li>
+                        ) : (
+                            canLogin &&
+                            canRegister &&
+                            authItems.map((authItem) => (
+                                <li key={authItem.name} className="text-center">
+                                    <NavLink href={authItem.href} active={route().current(authItem.link)}>
+                                        {authItem.name}
+                                    </NavLink>
+                                </li>
+                            ))
+                        )}
                     </ul>
                 </div>
             )}

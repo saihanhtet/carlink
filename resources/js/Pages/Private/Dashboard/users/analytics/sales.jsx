@@ -3,6 +3,14 @@ import { Button } from '@/components/ui/button';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Analytics = () => {
     const breadcrumbs = [
@@ -10,8 +18,12 @@ const Analytics = () => {
         { name: 'Car Sales Transactions', link: route('car-sales-dashboard') },
     ];
     const { transactions } = usePage().props;
+    const { data, links } = transactions;
+
     const [selectedFilter, setSelectedFilter] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+
+
     const transformData = (data) =>
         data.map((car) => [
             { content: car.transaction?.id ?? 'N/A', className: 'font-medium' },
@@ -54,17 +66,15 @@ const Analytics = () => {
     ];
 
     React.useEffect(() => {
-        setFilteredData(transformData(transactions.data));
-    }, [transactions.data]);
+        setFilteredData(transformData(data));
+    }, [data]);
 
     const handleView = (id) => {
         console.log(`View car with ID: ${id}`);
     };
 
-    console.log(transactions.data)
-
     const handleSearch = (query) => {
-        const results = transactions.data.filter((car) =>
+        const results = data.filter((car) =>
             car.model.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredData(transformData(results));
@@ -72,9 +82,7 @@ const Analytics = () => {
 
     const handleFilter = (filter) => {
         setSelectedFilter(filter);
-
-        let sortedData = [...transactions.data];
-
+        let sortedData = [...data];
         // Sorting logic
         switch (filter) {
             case 'price_asc':
@@ -104,7 +112,6 @@ const Analytics = () => {
         setFilteredData(transformData(sortedData));
     };
 
-    console.log(filteredData)
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
@@ -126,6 +133,37 @@ const Analytics = () => {
                     ]}
                 />
             </div>
+            {/* Pagination Controls */}
+            <div className="mt-6 flex justify-center">
+                <Pagination>
+                    <PaginationContent className="flex flex-wrap gap-2">
+                        {links.map((link, index) => {
+                            if (index === 0) {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationPrevious href={link.url} />
+                                    </PaginationItem>
+                                );
+                            } else if (index === links.length - 1) {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationNext href={link.url} />
+                                    </PaginationItem>
+                                );
+                            } else {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink href={link.url} isActive={link.active}>
+                                            {link.label}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                );
+                            }
+                        })}
+                    </PaginationContent>
+                </Pagination>
+            </div>
+
         </AuthenticatedLayout>
     );
 };

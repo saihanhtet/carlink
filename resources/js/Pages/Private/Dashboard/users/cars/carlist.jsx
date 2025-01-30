@@ -11,21 +11,21 @@ import {
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { handleFormSubmit } from "@/lib/utils";
 import CarCard from "@/Pages/Public/CarListingsPage/CarCard";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 const MyCarListDashboard = () => {
     const breadcrumbs = [
         { name: "Cars", link: route("car-list-dashboard") },
     ];
-    const { cars } = usePage().props; // Access the flash message from props
+    const { cars } = usePage().props;
     const { data, links } = cars;
     const [alert, setAlert] = useState(null);
     // Initialize the form hooks once outside
     const { delete: destroy, reset, clearErrors } = useForm();
 
     const handleEdit = (id) => {
-        router.visit(route('car-edit-dashboard', { car: id })); // Pass car ID or car object
+        router.visit(route('car-edit-dashboard', { car: id }));
     };
 
     const handleDelete = (id) => {
@@ -50,6 +50,7 @@ const MyCarListDashboard = () => {
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
+            <Head title="My Car Listing" />
             {/* Success or Error Message */}
             {alert && (
                 <Alert variant={alert.type} className="mb-4">
@@ -59,17 +60,22 @@ const MyCarListDashboard = () => {
 
             <div className="grid grid-cols-1 gap-6 p-4">
                 <div className="flex justify-between items-center">
-                    <p className="text-primary font-bold text-xl rubik capitalize">Your cars</p>
+                    <p className="text-primary font-bold text-xl rubik capitalize">Your cars For Sale</p>
                     <Button onClick={() => router.visit(route('car-upload-dashboard'))}>Upload Car</Button>
                 </div>
-                {data.map((car, index) => (
-                    <CarCard
-                        car={car}
-                        key={index}
-                        showEditButton={true}
-                        handleEditFunc={handleEdit}
-                        handleDelFunc={handleDelete} />
-                ))}
+                {data.length > 0 ? (
+                    data.map((car, index) => (
+                        <CarCard
+                            car={car}
+                            key={index}
+                            showEditButton={true}
+                            handleEditFunc={handleEdit}
+                            handleDelFunc={handleDelete}
+                        />
+                    ))
+                ) : (
+                    <p className="text-center p-3 border capitalize rounded-md bg-gray-200 text-lg">No cars available</p>
+                )}
             </div>
 
             {/* Pagination Controls */}

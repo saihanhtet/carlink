@@ -1,8 +1,8 @@
 import { BarChartCustom } from "@/components/chart/bar-chart";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { cn } from "@/lib/utils";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { TrendingDown, TrendingUp } from "lucide-react";
 
 
@@ -54,7 +54,8 @@ const TableTemplate = ({ caption, headers, data, className, ...props }) => {
 
                     {/* Body */}
                     <tbody>
-                        {data.map((row, rowIndex) => (
+                        {data.length > 0 ? (
+                            data.map((row, rowIndex) => (
                             <tr
                                 key={rowIndex}
                                 className={`bg-inherit border-b dark:bg-gray-800 dark:border-gray-700 ${rowIndex % 2 === 0 ? "bg-gray-50 dark:bg-gray-900" : ""
@@ -69,7 +70,13 @@ const TableTemplate = ({ caption, headers, data, className, ...props }) => {
                                     </td>
                                 ))}
                             </tr>
-                        ))}
+                            ))) : (
+                            <tr>
+                                <td colSpan={headers.length} className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    No Data Available
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -137,7 +144,7 @@ const Analytics = () => {
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="User Dashboard" />
             <div className="flex flex-1 flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     {/* Cards */}

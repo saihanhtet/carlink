@@ -38,8 +38,6 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
     });
     const [alert, setAlert] = useState(null);
 
-    console.log(car);
-
     const handleSubmit = () => {
         handleFormSubmit({
             data,

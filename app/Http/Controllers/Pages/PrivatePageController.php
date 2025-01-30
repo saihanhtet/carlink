@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Engine;
 use App\Models\Fuel;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -50,9 +51,33 @@ class PrivatePageController extends Controller
 
     private function getAdminData()
     {
-        // Fetch admin-specific data
-        return [];
+        $user = Auth::user();
+        $role = $user->is_admin ? 'admin' : 'user';
+        $dashboardData = $this->dashboardService->getDashboardData($role);
+        // Fix: Use count() instead of retrieving entire collections
+        $dashboardData['users_count'] = User::count();
+        $dashboardData['transactions_count'] = Transaction::count();
+        $dashboardData['cars_count'] = Car::count();
+
+        $cars = Car::with(['brand', 'fuel', 'engine', 'user', 'appointment', 'transaction']);
+        $monthlyBids = $this->bidStatisticsService->getMonthlyBidsAdmin();
+        $transactions = $this->dashboardService->getAllCarsWithTransactions();
+
+        // Get the month range
+        $startMonth = $monthlyBids->first() ? $monthlyBids->first()->month : '';
+        $endMonth = $monthlyBids->last() ? $monthlyBids->last()->month : '';
+        $monthLabel = $startMonth . ' - ' . $endMonth;
+        $totalProfit = $this->dashboardService->calculateTotalProfit($cars);
+        $dashboardData['cars'] = $cars->get();
+        $dashboardData['monthly_bids'] = $monthlyBids;
+        $dashboardData['month_label'] = $monthLabel;
+        $dashboardData['total_profit'] = $totalProfit;
+        $dashboardData['transactions'] = $transactions;
+        $dashboardData['average_bidding'] = $monthlyBids->avg('average_bidding');
+
+        return $dashboardData;
     }
+
 
     private function getUserData()
     {
@@ -91,12 +116,20 @@ class PrivatePageController extends Controller
 
     public function userManagementDashboard()
     {
-        return $this->renderPage('Private/Dashboard/admin/user-management');
+        $users = User::with(['profile'])->distinct()->paginate(10);
+        $dashboardData  = [
+            'users' => $users
+        ];
+        return $this->renderPage('Private/Dashboard/admin/user-management', $dashboardData);
     }
 
     public function carManagementDashboard()
     {
-        return $this->renderPage('Private/Dashboard/admin/car-management');
+        $cars = Car::with(['brand', 'fuel', 'engine', 'user', 'appointment'])->distinct()->paginate(10);
+        $dashboardData  = [
+            'cars' => $cars
+        ];
+        return $this->renderPage('Private/Dashboard/admin/car-management', $dashboardData);
     }
 
     public function salesDashboard(Request $request)

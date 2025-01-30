@@ -42,9 +42,9 @@ class Car extends Model
         return $this->hasMany(Bid::class);
     }
 
-    public function appointments()
+    public function appointment()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->hasOne(Appointment::class);
     }
 
     public function transaction()

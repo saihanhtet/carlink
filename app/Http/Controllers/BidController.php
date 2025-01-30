@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Bid;
 use App\Models\Car;
 use Illuminate\Http\RedirectResponse;
@@ -28,25 +29,25 @@ class BidController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(['car_id' => 'required|exists:cars,id',
-            'bid_price' => 'required|numeric|min:1', // Ensure bid price is a valid positive number
+            'bid_price' => 'required|numeric|min:1',
         ]);
-
         // Fetch the car to perform additional checks
         $car = Car::findOrFail($validated['car_id']);
-
         // Check if the authenticated user is the owner of the car
         if ($car->user_id === Auth::id()) {
             return back()->withErrors(['bid_price' => 'You cannot place a bid on your own car.']);
         }
-
+        // Check if the car has an approved appointment
+        $appointment = Appointment::where('car_id', $car->id)->first();
+        if (!$appointment || $appointment->status !== 'approved') {
+            return back()->withErrors(['bid_price' => 'You can only place a bid on cars with an approved appointment.']);
+        }
         // Get the highest current bid for the car
         $highestBid = Bid::where('car_id', $car->id)->max('bid_price');
-
         // Check if the new bid is higher than the highest bid
         if ($highestBid && $validated['bid_price'] <= $highestBid) {
             return back()->withErrors(['bid_price' => 'Your bid must be higher than the current highest bid of ' . number_format($highestBid, 2) . '.']);
         }
-
         // Create the bid
         Bid::create([
             'car_id' => $validated['car_id'],

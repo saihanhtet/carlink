@@ -1,102 +1,191 @@
-import { BarChartCustom } from "@/components/chart/bar-chart";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import ReUsableTable from "@/components/reusabletable";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { cn } from "@/lib/utils";
-import { Head, Link, usePage } from "@inertiajs/react";
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { Head, useForm, usePage } from "@inertiajs/react";
+import { BadgePlus, Car, CircleOff, Edit, Signature, Trash } from "lucide-react";
+import React, { useState } from "react";
 
-
-
-const CardTemplate = ({ title, content, link, linkContent, className, ...props }) => {
-    return (
-        <Card
-            {...props}
-            className={cn("", className)}
-        >
-            <CardHeader className="py-4">
-                <CardTitle className="font-lg font-semibold rubik capitalize">{title}</CardTitle>
-            </CardHeader>
-            <CardContent className="font-semibold text-muted-foreground text-lg poppins text-right capitalize">
-                {content}
-            </CardContent>
-            <CardFooter className="flex justify-end items-center border-t-2 border-muted py-3">
-                <Link
-                    href={link}
-                    className="underline text-muted-foreground font-semibold underline-offset-4 poppins capitalize"
-                >
-                    {linkContent}
-                </Link>
-            </CardFooter>
-        </Card>
-    );
-};
-
-const TableTemplate = ({ caption, headers, data, className, ...props }) => {
-    return (
-        <div className={`relative overflow-x-auto shadow-md sm:rounded-lg border rounded-lg ${className}`} {...props}>
-            <div className="overflow-y-auto max-h-[400px]">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    {/* Caption */}
-                    {caption && (
-                        <caption className="p-5 text-lg font-bold text-left rtl:text-right text-muted-foreground  capitalize">
-                            {caption}
-                            <p className="mt-1 text-sm font-seminormal text-muted-foreground">
-                                Browse your data in the table below.
-                            </p>
-                        </caption>
-                    )}
-
-                    {/* Headers */}
-                    <thead className="sticky top-0 bg-primary z-10">
-                        <tr>
-                            {headers.map((header, index) => (
-                                <th
-                                    key={index}
-                                    className={`px-6 py-3 text-xs uppercase text-white ${header.className || ""}`}
-                                >
-                                    {header.title}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-
-                    {/* Body */}
-                    <tbody>
-                        {data.map((row, rowIndex) => (
-                            <tr
-                                key={rowIndex}
-                                className={`bg-inherit border-b dark:bg-gray-800 dark:border-gray-700 ${rowIndex % 2 === 0 ? "bg-gray-50 dark:bg-gray-900" : ""
-                                    }`}
-                            >
-                                {row.map((cell, cellIndex) => (
-                                    <td
-                                        key={cellIndex}
-                                        className={`px-6 py-4 ${cell.className || ""}`}
-                                    >
-                                        {cell.content}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-};
-
-
-const AdminDashboard = () => {
+const CarManagementDashboard = () => {
     const breadcrumbs = [
         { name: "Dashboard", link: route("dashboard") },
         { name: "Car Management", link: route("car-management-dashboard") },
     ];
+
+    const { cars } = usePage().props;
+    const [filteredData, setFilteredData] = useState([]);
+    const [alert, setAlert] = useState(null);
+
+    const {
+        data,
+        setData,
+        put,
+        onSuccess,
+        onError,
+    } = useForm({
+        id: '',
+        car_id: '',
+        status: '',
+    });
+
+    const updateCarStatus = () => {
+        put(route('car.appointment.update'), {
+            data,
+            preserveScroll: false,
+            onSuccess: (response) => {
+                setAlert({
+                    type: "success",
+                    message: 'Car status updated successfully',
+                });
+                if (onSuccess) onSuccess(response);
+            },
+            onError: (errors) => {
+                setAlert({
+                    type: "destructive",
+                    message: "Failed to update the car status. Please try again.",
+                });
+                if (onError) onError(errors);
+            },
+        });
+    };
+
+    const tableHeaders = [
+        { title: "Car ID", className: "w-[100px]" },
+        { title: "Model", className: "w-[150px]" },
+        { title: "Year", className: "w-[100px]" },
+        { title: "Status", className: "w-[150px] text-center" },
+        { title: "Date", className: "w-[200px] text-center" },
+        { title: "Price", className: "w-[50px] text-center" },
+        { title: "Actions", className: "w-auto text-center" }
+    ];
+
+    const transformData = (data) => {
+        return data.map((car) => {
+            return [
+                { content: car.id, className: "font-medium" },
+                { content: car.model, className: "font-medium" },
+                { content: car.registration_year, className: "font-medium text-center" },
+                { content: car.appointment.status, className: "font-medium capitalize text-center" },
+                { content: car.appointment.appointment_date, className: "font-medium capitalize text-center" },
+                { content: `$${car.price}`, className: "font-medium text-center" },
+                {
+                    content: (
+                        <div className="flex justify-center gap-2">
+                            {car.appointment.status !== 'approved' ? (
+                                <>
+                                    <Button
+                                        className="px-2 py-1 rounded w-auto"
+                                        variant='destructive'
+                                        onClick={async (e) => {
+                                            setData('id', car.appointment.id);
+                                            setData('car_id', car.id);
+                                            setData('status', 'approved');
+                                            await new Promise((resolve) => setTimeout(resolve, 0));
+                                            updateCarStatus();
+                                        }}
+                                    >
+                                        <Signature /> Approved
+                                    </Button>
+                                    <Button
+                                        className="px-2 py-1 rounded  w-auto"
+                                        variant='destructive'
+                                        onClick={async (e) => {
+                                            setData('id', car.id);
+                                            setData('car_id', car.id);
+                                            setData('status', 'denied');
+                                            await new Promise((resolve) => setTimeout(resolve, 0));
+                                            updateCarStatus();
+                                        }}
+                                    >
+                                        <CircleOff /> Denied
+                                    </Button>
+                                </>
+                            ) : (
+                                <Button
+                                    className="px-2 py-1 rounded w-auto"
+                                    variant='destructive'
+                                    disabled
+                                >
+                                    <Signature /> Approved
+                                </Button>
+                            )}
+
+                        </div>
+                    ),
+                    className: "text-center",
+                },
+            ]
+        })
+    }
+
+    const handleSearch = (query) => {
+        const results = cars.data.filter((car) =>
+            car.model.toLowerCase().includes(query.toLowerCase()) ||
+            car.registration_year.toString().includes(query)
+        );
+        setFilteredData(transformData(results));
+    };
+
+    React.useEffect(() => {
+        setFilteredData(transformData(cars.data));
+    }, [cars.data]);
+
+    React.useEffect(() => {
+        if (data.id && data.status) {
+            updateCarStatus();
+        }
+    }, [data]);
+
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
-            <div className="div">car managemnet dashboard</div>
+            <Head title="Car Management Dashboard" />
+            {alert && (
+                <Alert variant={alert.type} className="mb-4">
+                    {alert.message}
+                </Alert>
+            )}
+            <div className="flex flex-1 flex-col gap-4">
+                <ReUsableTable
+                    caption="Car List"
+                    className={'max-h-[550px] h-auto'}
+                    tableHeaders={tableHeaders}
+                    tableData={filteredData}
+                    onSearch={handleSearch}
+                />
+            </div>
+            <div className="mt-6 flex justify-center">
+                <Pagination>
+                    <PaginationContent className="flex flex-wrap gap-2">
+                        {/* Page Numbers */}
+                        {cars.links.map((link, index) => {
+                            if (index === 0) {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationPrevious href={link.url} />
+                                    </PaginationItem>
+                                );
+                            } else if (index === cars.links.length - 1) {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationNext href={link.url} />
+                                    </PaginationItem>
+                                );
+                            } else {
+                                return (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink href={link.url} isActive={link.active}>
+                                            {link.label}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                );
+                            }
+                        })}
+                    </PaginationContent>
+                </Pagination>
+            </div>
         </AuthenticatedLayout>
     );
 };
 
-export default AdminDashboard;
+export default CarManagementDashboard;

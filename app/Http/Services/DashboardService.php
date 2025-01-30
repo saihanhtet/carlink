@@ -79,6 +79,24 @@ class DashboardService
             ->get();
     }
 
+    public function getAllCarsWithTransactions()
+    {
+        return Car::select(
+            'cars.id as car_id',
+            'cars.model',
+            'transactions.id as transaction_id',
+            'transactions.transaction_date',
+            'transactions.final_price',
+            'fuels.name as fuel_name'
+        )
+            ->join('transactions', 'cars.id', '=', 'transactions.car_id')
+            ->join('fuels', 'fuels.id', '=', 'cars.fuel_id')
+            ->orderBy('transactions.transaction_date', 'desc')
+            ->limit(10)
+            ->get();
+    }
+
+
     /**
      * Retrieve bidding information related to the user's cars.
      *

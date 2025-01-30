@@ -26,12 +26,12 @@ const HeroSection = () => {
             {/* Hero Section Overlay */}
             <div className="container mx-auto text-center z-20 flex flex-col items-start h-screen w-full justify-end">
                 {/* [text-shadow:_0_4px_4px_rgb(99_102_241_/_1)] drop-shadow-[2px_2px_2px_rgba(0,0,0,0.5)] */}
-                <h2 className="text-4xl font-black mb-1 text-white text-left" style={{ letterSpacing: '3px' }}>
+                <h2 className="text-3xl font-black mb-1 text-white text-left" style={{ letterSpacing: '3px' }}>
                     <div className="p-3 flex flex-col items-center md:items-start">
-                        <div className="text-3xl rubik inline-flex bg-black/30 p-3">Buy</div>
-                        <div className="text-3xl rubik inline-flex bg-black/30 p-3 mt-1">Your Dream Car</div>
-                        <p className="font-normal text-left text-lg w-full md:w-3/6 mt-1 bg-black/30 p-3">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Error nesciunt provident culpa atque eius expedita iure tenetur doloremque, veritatis illo reiciendis quis deserunt neque voluptates id earum totam molestias sequi.
+                        <div className="text-3xl rubik inline-flex bg-black/10 p-3">Buy</div>
+                        <div className="text-3xl rubik inline-flex bg-black/10 p-3 mt-1">Your Dream Car</div>
+                        <p className="font-black text-left text-lg w-full md:w-3/6 mt-1 bg-black/10 p-3">
+                            Experience the thrill of owning your dream car. Whether it's a high-performance supercar, a timeless classic, or a luxury ride, we bring you the finest selection at unbeatable deals. Start your journey today and drive home excellence.
                         </p>
                     </div>
                 </h2>

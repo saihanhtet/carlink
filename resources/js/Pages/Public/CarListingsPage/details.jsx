@@ -57,10 +57,12 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
     const { car, currentBid, highestBid, lastBid, user, bidable, isOwner } = usePage().props;
     const [alert, setAlert] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
+
     const {
         data,
         setData,
         post,
+        put,
         errors,
         reset,
         clearErrors,
@@ -86,6 +88,47 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
         });
     };
 
+    const handleBidOpen = (car_id) => {
+        put(route('bid.update'), {
+            data: { id: car_id, action: 'open' },
+            preserveScroll: false,
+            onSuccess: (response) => {
+                setAlert({
+                    type: "success",
+                    message: 'Car status updated successfully',
+                });
+                if (onSuccess) onSuccess(response);
+            },
+            onError: (errors) => {
+                setAlert({
+                    type: "destructive",
+                    message: "Failed to update the car status. Please try again.",
+                });
+                if (onError) onError(errors);
+            },
+        });
+    }
+
+    const handleBidClose = (car_id) => {
+        put(route('bid.update'), {
+            data: { id: car_id, action: 'close' },
+            preserveScroll: false,
+            onSuccess: (response) => {
+                setAlert({
+                    type: "success",
+                    message: 'Car status updated successfully',
+                });
+                if (onSuccess) onSuccess(response);
+            },
+            onError: (errors) => {
+                setAlert({
+                    type: "destructive",
+                    message: "Failed to update the car status. Please try again.",
+                });
+                if (onError) onError(errors);
+            },
+        });
+    }
 
     return (
         <GuestLayout canLogin={canLogin} canRegister={canRegister} isLoggedIn={isLoggedIn}>
@@ -158,19 +201,20 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                                 handleSubmit={handleSubmit}
                             />
                         </div>)}
-                        {!bidable ? (
+                        {!bidable && user && !isOwner ? (
                             <div className="text-red-600 font-semibold text-center">You cannot bid this car anymore.</div>
                         ) : null}
                         {isOwner && (
                             <div className="flex flex-wrap justify-start items-center w-full gap-3">
                                 {car.bid_status === 'open' ? (
-                                    <Button className='bg-red-600 hover:bg-red-700 text-white w-auto'>
-                                        <Flag /> Close Bidding</Button>
-                                ) : (
-                                    <Button className='bg-blue-600 hover:bg-blue-700 text-white w-auto'>
-                                        <Goal />Re-Open Bidding</Button>
-                                )}
-                                <Button className='bg-gray-500 hover:bg-gray-600 text-white w-auto'>
+                                    <Button
+                                        className='bg-red-600 hover:bg-red-700 text-white w-auto'
+                                        onClick={() => router.visit(route('bidding-history-dashboard'))}
+                                    >
+                                        <Flag /> Make Transaction Bidding</Button>
+                                ) : null}
+                                <Button className='bg-gray-500 hover:bg-gray-600 text-white w-auto'
+                                    onClick={() => router.visit(route('car-edit-dashboard', { car: car.id }))}>
                                     <Pencil />
                                     Edit
                                 </Button>

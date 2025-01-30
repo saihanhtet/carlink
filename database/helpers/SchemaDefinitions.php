@@ -15,6 +15,7 @@ class SchemaDefinitions
         $table->string('password');
         $table->rememberToken();
         $table->boolean('is_admin')->default(false);
+        $table->enum('status', ['banned', 'active'])->default('active');
         $table->timestamps();
     }
 

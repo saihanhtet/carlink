@@ -33,7 +33,15 @@ class PublicPageController extends Controller
 
     public function welcome()
     {
-        return $this->renderPage('Public/HomePage/page');
+        $cars = Car::with(['brand', 'fuel', 'engine', 'user'])->get();
+        $brands = Brand::all();
+        $fuels = Fuel::all();
+        $data = [
+            'cars' => $cars,
+            'brands' => $brands,
+            'fuels' => $fuels,
+        ];
+        return $this->renderPage('Public/HomePage/page', $data);
     }
 
     public function forSale()

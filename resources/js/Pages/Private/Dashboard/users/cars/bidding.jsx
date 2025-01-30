@@ -100,7 +100,7 @@ const MyCarBiddingDashboard = () => {
                             {bid.car.bid_status === 'open' ? (
                                 <Button
                                     className="px-2 py-1 rounded w-auto"
-                                    onClick={() => openTransactionDialog(bid.car.id, bid.car.user.id, bid.user_id, bid.car.model, bid.user.name, bid.bid_price)}
+                                    onClick={() => openTransactionDialog(bid.car.id, bid.car.user_id, bid.user_id, bid.car.model, bid.user.name, bid.bid_price)}
                                 >
                                     Make Transaction
                                 </Button>

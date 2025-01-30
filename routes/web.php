@@ -35,6 +35,9 @@ Route::middleware(['auth', 'verified', IsAdminMiddleware::class])->group(functio
     Route::get('/dashboard/admin/analytics', [PrivatePageController::class, 'dashboard'])->name('admin-dashboard');
     Route::get('/dashboard/admin/users-management', [PrivatePageController::class, 'userManagementDashboard'])->name('user-management-dashboard');
     Route::get('/dashboard/admin/cars-management', [PrivatePageController::class, 'carManagementDashboard'])->name('car-management-dashboard');
+
+    Route::put('/dashboard/admin/users-management', [ProfileController::class, 'updateStatus'])->name('user.update');
+    Route::put('/dashboard/admin/users-management/appointment', [AppointmentController::class, 'updateAppointmentStatus'])->name('car.appointment.update');
 });
 
 // Authenticated Routes
@@ -60,6 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Bid Management
     Route::post('/bids', [BidController::class, 'store'])->name('bid.store');
+    Route::put('/bids', [CarController::class, 'updateBidStatus'])->name('bid.update');
 
     // Resources Routes
     Route::resource('/appointments', AppointmentController::class);

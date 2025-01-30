@@ -20,7 +20,7 @@ const CarSearchTools = ({ brands, fuels, cars }) => {
   const [rangeValues, setRangeValues] = useState({
     price: { min: "", max: "" },
     year: { start: "", end: "" },
-    zip: { zip: "" },
+    // zip: { zip: "" },
   });
 
   const modelsByBrand = cars.reduce((acc, car) => {
@@ -69,7 +69,7 @@ const CarSearchTools = ({ brands, fuels, cars }) => {
     console.log("Zip Code:", zipCode);
     console.log("Price Range:", rangeValues.price);
     console.log("Year Range:", rangeValues.year);
-    console.log("Zip:", rangeValues.zip);
+    // console.log("Zip:", rangeValues.zip);
 
     const filterQuery = {
       brands: selectedMake,
@@ -175,7 +175,7 @@ const CarSearchTools = ({ brands, fuels, cars }) => {
       ))}
 
       {/* Zip Code Input */}
-      <div className="col-span-2 lg:col-span-2">
+      {/* <div className="col-span-2 lg:col-span-2">
         <label className="text-sm block">Zip Code</label>
         <TextInput
           id="zipCode"
@@ -185,11 +185,11 @@ const CarSearchTools = ({ brands, fuels, cars }) => {
           className="w-full border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-0"
           placeholder="Enter Zip Code"
         />
-      </div>
+      </div> */}
 
       {/* Submit Button */}
       <div className="col-span-2 lg:col-span-2 lg:col-end-7">
-        <Button className="w-full" onClick={handleSubmit}>
+        <Button className="w-full mt-[20px]" onClick={handleSubmit}>
           Search
         </Button>
       </div>

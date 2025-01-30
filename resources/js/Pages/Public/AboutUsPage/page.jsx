@@ -19,7 +19,7 @@ const AboutUs = ({ canLogin, canRegister, isLoggedIn }) => {
                     </section>
 
                     {/* Why Choose Us Section */}
-                    <section className="grid md:grid-cols-2 gap-12 items-center mb-12 place-items-center border p-3 rounded-sm">
+                    <section className="grid md:grid-cols-2 gap-12 items-center mb-12 place-items-center shadow-lg rounded-md p-3">
                         <div className="space-y-4">
                             <h2 className="text-2xl font-semibold">Why Choose Us?</h2>
                             <ul className="list-disc pl-5 space-y-2">

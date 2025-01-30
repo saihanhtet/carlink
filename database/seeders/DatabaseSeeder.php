@@ -47,12 +47,13 @@ class DatabaseSeeder extends Seeder
         )->create();
 
         // Create an admin user
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
             'is_admin' => true,
         ]);
+        Profile::factory()->create(['user_id' => $user->id]);
 
         // Create 20 users and their profiles
         $users = User::factory(20)->create();
@@ -161,7 +162,7 @@ class DatabaseSeeder extends Seeder
                 'registration_year' => 2022,
                 'price' => 38000.00,
                 'mileage' => 12000,
-                'image' => 'cars_images/001.png',
+                'image' => 'cars_images/002.png',
                 'transmission' => 'Manual',
                 'seats' => 5,
                 'description' => 'Sporty hatchback with cutting-edge design.',
@@ -180,7 +181,7 @@ class DatabaseSeeder extends Seeder
                 'registration_year' => 2020,
                 'price' => 45000.00,
                 'mileage' => 25000,
-                'image' => 'cars_images/001.png',
+                'image' => 'cars_images/003.png',
                 'transmission' => 'Manual',
                 'seats' => 4,
                 'description' => 'Sporty hatchback with cutting-edge design.',
