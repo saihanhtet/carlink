@@ -38,7 +38,15 @@ class PublicPageController extends Controller
 
     public function forSale()
     {
-        return $this->renderPage('Public/ForSalePage/page');
+        $cars = Car::with(['brand', 'fuel', 'engine', 'user'])->get();
+        $brands = Brand::all();
+        $fuels = Fuel::all();
+        $data = [
+            'cars' => $cars,
+            'brands' => $brands,
+            'fuels' => $fuels,
+        ];
+        return $this->renderPage('Public/ForSalePage/page', $data);
     }
 
     public function aboutUs()
@@ -59,7 +67,7 @@ class PublicPageController extends Controller
      */
     public function carDetailsPage($id)
     {
-        $currentCar = Car::with(['brand', 'fuel', 'user'])->findOrFail($id);
+        $currentCar = Car::with(['brand', 'fuel', 'engine', 'user', 'user.profile'])->findOrFail($id);
         $currentCar->image = $currentCar->image ? asset('storage/' . $currentCar->image) : null;
 
         $currentBids = Bid::with('user')->where('car_id', $id)->get();
@@ -73,7 +81,7 @@ class PublicPageController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             $isOwner = $user->id === $currentCar->user_id;
-            $bidable = $user->id !== $currentCar->user_id;
+            $bidable = $user->id !== $currentCar->user_id && $currentCar->bid_status !== 'close';
         }
 
         $data = [
@@ -97,26 +105,15 @@ class PublicPageController extends Controller
      */
     public function carListing(Request $request)
     {
-        $query = Car::with(['brand', 'fuel']);
+        $query = Car::with(['brand', 'fuel', 'engine', 'user'])->orderBy('created_at', 'desc');;
 
         if ($request->input('clearFilters') === 'true') {
-            $cars = $query->paginate(15);
-            $brands = Brand::all();
-            $fuels = Fuel::all();
-
-            return $this->renderPage('Public/CarListingsPage/page', [
-                'cars' => $cars,
-                'brands' => $brands,
-                'fuels' => $fuels,
-                'selectedFilters' => [],
-                'isFilterActive' => false,
-                'status' => 'All cars are displayed.',
-            ]);
+            return $this->renderClearFilters($query);
         }
 
         $selectedFilters = [
-            'brands' => $request->input('brands') ? explode(',', $request->input('brands')) : [],
-            'fuels' => $request->input('fuels') ? explode(',', $request->input('fuels')) : [],
+            'brands' => $this->parseFilter($request->input('brands')),
+            'fuels' => $this->parseFilter($request->input('fuels')),
             'priceMin' => $request->input('priceMin'),
             'priceMax' => $request->input('priceMax'),
             'yearStart' => $request->input('yearStart'),
@@ -127,8 +124,8 @@ class PublicPageController extends Controller
 
         $cars = $query->paginate(15);
         $status = $cars->isEmpty()
-            ? 'No cars found matching your filters. Please adjust your search criteria.'
-            : 'Cars found matching your filters.';
+        ? 'No cars found matching your filters. Please adjust your search criteria.'
+        : 'Cars found matching your filters.';
 
         foreach ($cars->items() as $car) {
             $car->image = $car->image ? asset('storage/' . $car->image) : null;
@@ -145,6 +142,33 @@ class PublicPageController extends Controller
             'isFilterActive' => $this->isFilterActive($selectedFilters),
             'status' => $status,
         ]);
+    }
+
+    /**
+     * Render response when filters are cleared.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Inertia\Response
+     */
+    private function renderClearFilters($query)
+    {
+        $cars = $query->paginate(15);
+        $brands = Brand::all();
+        $fuels = Fuel::all();
+
+        return $this->renderPage('Public/CarListingsPage/page', [
+            'cars' => $cars,
+            'brands' => $brands,
+            'fuels' => $fuels,
+            'selectedFilters' => [],
+            'isFilterActive' => false,
+            'status' => 'All cars are displayed.',
+        ]);
+    }
+
+    private function parseFilter($filter)
+    {
+        return $filter && strtolower($filter) !== 'all' ? explode(',', $filter) : [];
     }
 
     /**

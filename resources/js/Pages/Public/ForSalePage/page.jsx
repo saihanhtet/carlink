@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CarSearchTools from './CarSearchTools'
 import YourGarageSection from './YourGarage'
+import { usePage } from '@inertiajs/react'
 
 const ForSale = ({ canLogin, canRegister, isLoggedIn }) => {
+  const { cars, brands, fuels } = usePage().props;
   return (
     <GuestLayout canLogin={canLogin} canRegister={canRegister} isLoggedIn={isLoggedIn}>
       <section className="container mx-auto flex justify-between items-center p-4 py-10">
@@ -16,7 +18,7 @@ const ForSale = ({ canLogin, canRegister, isLoggedIn }) => {
               <TabsTrigger value="make">Make</TabsTrigger>
             </TabsList>
             <TabsContent value="make">
-              <Card className='rounded-md'>
+              <Card className='rounded-md bg-inherit border-none shadow-md'>
                 <CardHeader>
                   <CardTitle className="rubik font-xl font-bold">Filter Cars</CardTitle>
                   <CardDescription>
@@ -24,7 +26,7 @@ const ForSale = ({ canLogin, canRegister, isLoggedIn }) => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <CarSearchTools />
+                  <CarSearchTools brands={brands} fuels={fuels} cars={cars} />
                 </CardContent>
               </Card>
             </TabsContent>

@@ -8,6 +8,7 @@ import { handleFormSubmit } from '@/lib/utils';
 import { Alert } from '@/components/ui/alert';
 import { useEffect, useState } from 'react';
 import { MoveLeft } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function CarForm({ brands, fuels, engines, car = null, className = '', otherCars = [], user }) {
     const {
@@ -37,6 +38,8 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
     });
     const [alert, setAlert] = useState(null);
 
+    console.log(car);
+
     const handleSubmit = () => {
         handleFormSubmit({
             data,
@@ -59,7 +62,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                 (otherCar) =>
                     otherCar.model === data.model && otherCar.brand_id === data.brand_id
             );
-            if (sameModelCars.length === 0) return 'Fair Deal';
+            if (sameModelCars.length === 0) return 'Not Available';
 
             const avgPrice = sameModelCars.reduce((sum, car) => sum + car.price, 0) / sameModelCars.length;
 
@@ -110,7 +113,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         value={data.model}
                         onChange={(e) => setData('model', e.target.value)}
                         placeholder="Enter car model"
-                        className='focus:ring-0'
+                        className='focus:ring-0 bg-white'
                     />
                     <InputError message={errors.model} />
                 </div>
@@ -125,7 +128,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                             setData('registration_year', e.target.value)
                         }
                         placeholder="Enter registration year"
-                        className='focus:ring-0'
+                        className='focus:ring-0 bg-white'
                     />
                     <InputError message={errors.registration_year} />
                 </div>
@@ -138,7 +141,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         value={data.price}
                         onChange={(e) => setData('price', parseFloat(e.target.value))}
                         placeholder="Enter price"
-                        className='focus:ring-0'
+                        className='focus:ring-0 bg-white'
                     />
                     <InputError message={errors.price} />
                 </div>
@@ -151,7 +154,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         value={data.mileage}
                         onChange={(e) => setData('mileage', e.target.value)}
                         placeholder="Enter mileage"
-                        className='focus:ring-0'
+                        className='focus:ring-0 bg-white'
                     />
                     <InputError message={errors.mileage} />
                 </div>
@@ -166,24 +169,9 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                             setData('seats', e.target.value)
                         }
                         placeholder="Enter seats amount of your car"
-                        className='focus:ring-0'
+                        className='focus:ring-0 bg-white'
                     />
                     <InputError message={errors.seats} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="description" value="Car Description" />
-                    <TextInput
-                        id="description"
-                        type="text"
-                        value={data.description}
-                        onChange={(e) =>
-                            setData('description', e.target.value)
-                        }
-                        placeholder=""
-                        className='focus:ring-0 h-48'
-                    />
-                    <InputError message={errors.description} />
                 </div>
 
                 <div>
@@ -192,7 +180,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         onValueChange={(value) => setData('transmission', value)}
                         value={data.transmission}
                     >
-                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                        <SelectTrigger className="w-full border bg-white border-gray-300 shadow-sm focus:ring-0">
                             <SelectValue placeholder="Select a Brand" />
                         </SelectTrigger>
                         <SelectContent>
@@ -209,7 +197,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         onValueChange={(value) => setData('brand_id', value)}
                         value={data.brand_id}
                     >
-                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                        <SelectTrigger className="w-full border bg-white border-gray-300 shadow-sm focus:ring-0">
                             <SelectValue placeholder="Select a Brand" />
                         </SelectTrigger>
                         <SelectContent>
@@ -229,7 +217,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         onValueChange={(value) => setData('fuel_id', value)}
                         value={data.fuel_id}
                     >
-                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                        <SelectTrigger className="w-full border bg-white border-gray-300 shadow-sm focus:ring-0">
                             <SelectValue placeholder="Select a Fuel Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -249,7 +237,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                         onValueChange={(value) => setData('engine_id', value)}
                         value={data.engine_id}
                     >
-                        <SelectTrigger className="w-full border border-gray-300 shadow-sm focus:ring-0">
+                        <SelectTrigger className="w-full border bg-white border-gray-300 shadow-sm focus:ring-0">
                             <SelectValue placeholder="Select a Engine Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -271,10 +259,24 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                     name="image"
                     type="file"
                     onChange={(e) => setData('image', e.target.files[0])}
-                    className="focus:ring-0"
+                    className="focus:ring-0 bg-white"
                 />
                 <InputError message={errors.image} />
             </div>
+
+            <div>
+                <InputLabel htmlFor="description" value="Car Description" />
+                <textarea
+                    id="description"
+                    value={data.description}
+                    onChange={(e) => setData('description', e.target.value)}
+                    placeholder="Write the information of car"
+                    className="focus:ring-0 h-48 w-full border-gray-300 rounded-md shadow-sm"
+                />
+                <InputError message={errors.description} />
+            </div>
+
+            <Separator />
 
             <div>
                 <InputLabel htmlFor="dealer_name" value="Dealer Name" />
@@ -284,7 +286,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                     value={data.dealer_name}
                     onChange={(e) => setData('dealer_name', e.target.value)}
                     placeholder="Enter dealer name"
-                    className='focus:ring-0'
+                    className='focus:ring-0 bg-white'
                 />
                 <InputError message={errors.dealer_name} />
             </div>
@@ -297,7 +299,7 @@ export default function CarForm({ brands, fuels, engines, car = null, className 
                     value={data.dealer_location}
                     onChange={(e) => setData('dealer_location', e.target.value)}
                     placeholder="Enter dealer location"
-                    className='focus:ring-0 focus:border-none'
+                    className='focus:ring-0 focus:border-none bg-white'
                 />
                 <InputError message={errors.dealer_location} />
             </div>

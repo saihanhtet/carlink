@@ -12,16 +12,20 @@ const Analytics = () => {
     const { transactions } = usePage().props;
     const [selectedFilter, setSelectedFilter] = useState('');
     const [filteredData, setFilteredData] = useState([]);
-
     const transformData = (data) =>
         data.map((car) => [
-            { content: car.transaction.id, className: 'font-medium' },
-            { content: car.id },
-            { content: car.model },
-            { content: car.fuel.name },
-            { content: car.transaction.buyer.name },
-            { content: car.transaction.transaction_date },
-            { content: `$${car.transaction.final_price.toLocaleString()}`, className: 'text-right' },
+            { content: car.transaction?.id ?? 'N/A', className: 'font-medium' },
+            { content: car.id ?? 'N/A' },
+            { content: car.model ?? 'N/A' },
+            { content: car.fuel?.name ?? 'N/A' },
+            { content: car.transaction?.buyer?.name ?? 'N/A' },
+            { content: car.transaction?.transaction_date ?? 'N/A' },
+            {
+                content: car.transaction?.final_price
+                    ? `$${car.transaction.final_price.toLocaleString()}`
+                    : 'N/A',
+                className: 'text-right'
+            },
             {
                 content: (
                     <div className="flex justify-center gap-2">
@@ -37,6 +41,7 @@ const Analytics = () => {
             },
         ]);
 
+
     const tableHeaders = [
         { title: 'Txn ID', className: 'w-[100px]' },
         { title: 'Car ID', className: 'w-[100px]' },
@@ -49,12 +54,14 @@ const Analytics = () => {
     ];
 
     React.useEffect(() => {
-        setFilteredData(transformData(transactions.data || []));
+        setFilteredData(transformData(transactions.data));
     }, [transactions.data]);
 
     const handleView = (id) => {
         console.log(`View car with ID: ${id}`);
     };
+
+    console.log(transactions.data)
 
     const handleSearch = (query) => {
         const results = transactions.data.filter((car) =>
@@ -97,12 +104,15 @@ const Analytics = () => {
         setFilteredData(transformData(sortedData));
     };
 
+    console.log(filteredData)
+
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
             <Head title="Car Sales" />
             <div>
                 <ReUsableTable
                     caption="Transactions List"
+                    className={'max-h-[650px] h-auto'}
                     tableHeaders={tableHeaders}
                     tableData={filteredData}
                     onSearch={handleSearch}

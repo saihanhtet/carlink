@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Profile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,8 +19,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $profile = Profile::where('user_id', $request->user()->id)->firstOrFail();
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'profile' => $profile,
             'status' => session('status'),
         ]);
     }
@@ -39,16 +42,34 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Update User model fields
+        $user->fill($request->only(['name', 'email']));
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+        $user->save();
+
+        // Update Profile model fields
+        $profileData = $request->only(['avatar', 'phone', 'address', 'birth_date']);
+        if ($request->hasFile('avatar')) {
+            $profileData['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+        // Update the user's profile
+        $profile = $user->profile;
+        if ($profile) {
+            $profile->update($profileData); // Update the profile
+        } else {
+            // Handle cases where the profile doesn't exist (optional)
+            $profileData['user_id'] = $user->id;
+            Profile::create($profileData);
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit')->with('status', 'Profile updated successfully.');
     }
+
+
 
     /**
      * Delete the user's account.

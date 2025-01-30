@@ -101,6 +101,7 @@ class SchemaDefinitions
         $table->id();
         $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
         $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
+        $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
         $table->decimal('final_price', 10, 2);
         $table->date('transaction_date');
         $table->timestamps();

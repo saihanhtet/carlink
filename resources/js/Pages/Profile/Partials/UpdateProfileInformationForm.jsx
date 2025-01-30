@@ -8,6 +8,7 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
+    profile,
     className = '',
 }) {
     const user = usePage().props.auth.user;
@@ -16,6 +17,9 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
+            phone: profile?.phone,
+            address: profile?.address,
+            birth_date: profile?.birth_date,
         });
 
     const submit = (e) => {
@@ -53,7 +57,6 @@ export default function UpdateProfileInformation({
 
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
-
                     <TextInput
                         id="email"
                         type="email"
@@ -63,9 +66,47 @@ export default function UpdateProfileInformation({
                         required
                         autoComplete="username"
                     />
-
                     <InputError className="mt-2" message={errors.email} />
                 </div>
+
+                <div>
+                    <InputLabel htmlFor="phone" value="Phone Number" />
+                    <TextInput
+                        id="phone"
+                        type="text"
+                        className="mt-1 block w-full border-gray-300"
+                        value={data.phone}
+                        onChange={(e) => setData('phone', e.target.value)}
+                        required
+                    />
+                    <InputError className="mt-2" message={errors.phone} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="address" value="Address" />
+                    <textarea
+                        id="address"
+                        value={data.address}
+                        onChange={(e) => setData('address', e.target.value)}
+                        placeholder=""
+                        className="mt-1 block w-full border-gray-300 bg-background"
+                    />
+                    <InputError message={errors.address} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="birth_date" value="Birth Date" />
+                    <TextInput
+                        id="birth_date"
+                        type="date"
+                        className="mt-1 block w-full border-gray-300"
+                        value={data.birth_date}
+                        onChange={(e) => setData('birth_date', e.target.value)}
+                        required
+                    />
+                    <InputError className="mt-2" message={errors.birth_date} />
+                </div>
+
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>

@@ -16,6 +16,7 @@ class TransactionFactory extends Factory
         return [
             'car_id' => Car::factory(),
             'buyer_id' => User::factory(),
+            'seller_id' => User::factory(),
             'final_price' => $this->faker->numberBetween(5000, 100000),
         ];
     }

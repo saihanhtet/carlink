@@ -104,13 +104,15 @@ class PrivatePageController extends Controller
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
 
-        // Retrieve query parameters for filters
         $search = $request->input('search');
         $filterFuel = $request->input('fuel');
         $filterDate = $request->input('date');
 
-        // Query transactions with filters and eager loading
-        $transactionsQuery = Car::with(['fuel', 'transaction.buyer'])
+        $transactionsQuery = Car::with(['fuel', 'transaction.buyer', 'transaction.seller'])
+        ->whereHas('transaction', function ($query) use ($user) {
+            $query->where('buyer_id', $user->id)
+                ->orWhere('seller_id', $user->id);
+        })
         ->when($search, function ($query, $search) {
             $query->where('model', 'LIKE', "%{$search}%")
             ->orWhere('transaction_id', 'LIKE', "%{$search}%");
@@ -124,9 +126,7 @@ class PrivatePageController extends Controller
                 $query->whereDate('transaction_date', $filterDate);
             });
 
-        // Paginate results
         $transactions = $transactionsQuery->paginate(10);
-
         $dashboardData = $this->dashboardService->getDashboardData($role);
         $dashboardData['transactions'] = $transactions;
 
@@ -139,9 +139,11 @@ class PrivatePageController extends Controller
         $user = Auth::user();
         $role = $user->is_admin ? 'admin' : 'user';
         $userData = User::with('profile')->findOrFail($user->id);
+
         $brands = Brand::all();
         $fuels = Fuel::all();
         $engines = Engine::all();
+
         $cars = Car::with(['brand', 'fuel', 'engine'])->get();
 
         // adding data
@@ -161,16 +163,18 @@ class PrivatePageController extends Controller
         $role = $user->is_admin ? 'admin' : 'user';
         $userData = User::with('profile')->findOrFail($user->id);
         $brands = Brand::all();
-
         $fuels = Fuel::all();
-        $currentCar = Car::with(['brand', 'fuel'])->findOrFail($id);
+        $engines = Engine::all();
+
+        $currentCar = Car::with(['brand', 'fuel', 'engine'])->findOrFail($id);
 
         // Add data to the dashboard
         $dashboardData = $this->dashboardService->getDashboardData($role);
         $dashboardData['user'] = $userData;
         $dashboardData['brands'] = $brands;
         $dashboardData['fuels'] = $fuels;
-        $dashboardData['currentCar'] = $currentCar; // Pass the current car data
+        $dashboardData['engines'] = $engines;
+        $dashboardData['currentCar'] = $currentCar;
 
         return $this->renderPage('Private/Dashboard/users/cars/edit', $dashboardData);
     }
@@ -182,6 +186,8 @@ class PrivatePageController extends Controller
         $role = $user->is_admin ? 'admin' : 'user';
         $allBids = $this->dashboardService->getBiddingRelatedWithUserCar();
         $dashboardData = $this->dashboardService->getDashboardData($role);
+
+        $allBids = $allBids->paginate(10);
         $dashboardData['allBids'] = $allBids;
 
         return $this->renderPage('Private/Dashboard/users/cars/bidding', $dashboardData);
@@ -201,14 +207,5 @@ class PrivatePageController extends Controller
         $dashboardData['cars'] = $cars;
 
         return $this->renderPage('Private/Dashboard/users/cars/carlist', $dashboardData);
-    }
-
-    public function carStatusDashboard()
-    {
-        $user = Auth::user();
-        $role = $user->is_admin ? 'admin' : 'user';
-
-        $dashboardData = $this->dashboardService->getDashboardData($role);
-        return $this->renderPage('Private/Dashboard/users/cars/status', $dashboardData);
     }
 }

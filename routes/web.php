@@ -47,7 +47,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cars/car-edit/{car}', [PrivatePageController::class, 'editCarDashboard'])->name('car-edit-dashboard');
     Route::get('/dashboard/cars/bidding-history', [PrivatePageController::class, 'biddingCarDashboard'])->name('bidding-history-dashboard');
     Route::get('/dashboard/cars/carlist', [PrivatePageController::class, 'carListDashboard'])->name('car-list-dashboard');
-    Route::get('/dashboard/cars/car-status', [PrivatePageController::class, 'carStatusDashboard'])->name('car-status-dashboard');
 
     // Car Management
     Route::post('/cars/store', [CarController::class, 'store'])->name('car.store');

@@ -37,8 +37,8 @@ const ReUsableTable = ({ caption, tableHeaders, tableData, className, filters, s
             <Separator orientation="horizontal" className="my-3" />
 
             {/* Table */}
-            <div className={`relative overflow-x-auto shadow-md sm:rounded-lg border rounded-lg ${className}`} {...props}>
-                <div className="overflow-y-auto max-h-[400px]">
+            <div className={`relative overflow-x-auto shadow-md sm:rounded-lg border rounded-lg`} {...props}>
+                <div className={`overflow-y-auto min-h-[400px] ${className}`}>
                     <table className="min-w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         {caption && (
                             <caption className="p-5 text-lg font-bold text-left rtl:text-right text-muted-foreground capitalize">

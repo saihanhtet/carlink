@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 
 const YourGarageSection = () => {
     return (
-        <section className="flex flex-col md:flex-row items-center justify-betwee py-10 px-6 md:px-16 border rounded-md poppins">
+        <section className="flex flex-col md:flex-row items-center justify-betwee py-10 px-6 md:px-16 rounded-md poppins">
             <div className="md:w-1/2 text-center md:text-left">
                 <h2 className="text-3xl font-bold rubik text-primary-foreground mb-4">Your Garage</h2>
                 <p className="text-lg text-white-600 mb-6">

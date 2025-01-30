@@ -23,7 +23,7 @@ const Footer = () => {
             <div className="max-w-4xl mx-auto">
                 <h3 className="text-2xl font-bold mb-4 rubik text-primary-foreground">CarLink</h3>
                 <p className="mb-4 poppins">
-                    Cars Sale is your ultimate destination for buying and selling cars. Whether you're looking for a brand-new model or a pre-owned vehicle, we offer a wide selection of cars for all types of customers. Find detailed information, photos, and reviews on the cars you're interested in and make an informed decision.
+                    CarLink is your ultimate destination for buying and selling cars. Whether you're looking for a brand-new model or a pre-owned vehicle, we offer a wide selection of cars for all types of customers. Find detailed information, photos, and reviews on the cars you're interested in and make an informed decision.
                 </p>
                 <div className="flex justify-center gap-4 my-4">
                     {socialIcons.map((icon, index) => (

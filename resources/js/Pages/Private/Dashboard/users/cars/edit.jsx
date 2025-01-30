@@ -10,11 +10,11 @@ const EditMyCarDashboard = () => {
     ];
 
 
-    const { brands, fuels, cars, user, currentCar } = usePage().props;
+    const { brands, fuels, cars, user, currentCar, engines } = usePage().props;
 
     return (
         <AuthenticatedLayout breadcrumbs={breadcrumbs}>
-            <CarForm brands={brands} fuels={fuels} otherCars={cars} user={user} car={currentCar} />
+            <CarForm brands={brands} fuels={fuels} otherCars={cars} user={user} car={currentCar} engines={engines} />
         </AuthenticatedLayout>
     )
 }

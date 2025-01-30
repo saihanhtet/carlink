@@ -12,7 +12,7 @@ const AboutUs = ({ canLogin, canRegister, isLoggedIn }) => {
                                 About Us
                             </h1>
                             <p className="text-lg leading-relaxed">
-                                Welcome to the <span className="font-semibold">Used Cars Sales Portal</span>,
+                                Welcome to the <span className="font-semibold rubik">CarLink</span>,
                                 your trusted destination for buying and selling cars seamlessly.
                             </p>
                         </div>

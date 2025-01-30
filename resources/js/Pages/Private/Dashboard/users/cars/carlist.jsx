@@ -18,19 +18,15 @@ const MyCarListDashboard = () => {
     const breadcrumbs = [
         { name: "Cars", link: route("car-list-dashboard") },
     ];
-
     const { cars } = usePage().props; // Access the flash message from props
     const { data, links } = cars;
-
     const [alert, setAlert] = useState(null);
-
     // Initialize the form hooks once outside
     const { delete: destroy, reset, clearErrors } = useForm();
 
     const handleEdit = (id) => {
         router.visit(route('car-edit-dashboard', { car: id })); // Pass car ID or car object
     };
-
 
     const handleDelete = (id) => {
         handleFormSubmit({

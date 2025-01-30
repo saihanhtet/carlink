@@ -4,7 +4,7 @@ import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 
-export default function Edit({ mustVerifyEmail, status }) {
+export default function Edit({ mustVerifyEmail, profile, status }) {
     const breadcrumbs = [
         { name: 'Account', link: '' },
         { name: 'Edit Profile', link: new URL(route("profile.edit")).pathname },
@@ -19,6 +19,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
+                            profile={profile}
                             className="max-w-xl"
                         />
                     </div>

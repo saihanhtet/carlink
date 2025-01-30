@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class TransactionController extends Controller
 {
@@ -28,22 +29,27 @@ class TransactionController extends Controller
         return response()->json($cars);
     }
 
-    // Store a new transaction
     public function store(Request $request)
     {
+        // Validate the request
         $request->validate([
             'car_id' => 'required|exists:cars,id',
             'final_price' => 'required|numeric',
+            'buyer_id' => 'required|exists:users,id',
+            'seller_id' => 'required|exists:users,id',
             'transaction_date' => 'required|date',
         ]);
 
         // Store the transaction
-        $transaction = Transaction::create(array_merge($request->all(), ['buyer_id' => Auth::id()]));
-
-        return response()->json([
-            'message' => 'Transaction recorded successfully.',
-            'transaction' => $transaction,
-        ], 201);
+        Transaction::create($request->all());
+        // Update the car status to 'sold'
+        $car = Car::find($request->car_id);
+        if ($car) {
+            $car->update(['car_status' => 'sold']);
+            $car->update(['bid_status' => 'close']);
+        }
+        // Redirect with success message
+        return Redirect::route('bidding-history-dashboard')->with('success', 'Created transaction and updated car status successfully.');
     }
 
     // Delete a transaction

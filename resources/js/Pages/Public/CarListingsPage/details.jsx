@@ -3,7 +3,7 @@ import { router, useForm, usePage } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { MoveLeft } from 'lucide-react';
+import { Flag, Goal, MoveLeft, Pencil } from 'lucide-react';
 import { Alert } from '@/components/ui/alert';
 
 import {
@@ -113,9 +113,9 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
 
                     {/* Right Column: Car Information */}
                     <div className="bg-white p-6 rounded-md shadow-md">
-                        <div className="flex justify-between items-center rubik">
-                            <h1 className="text-2xl font-bold mb-4">{car.model || ''}</h1>
-                            <h1 className="text-2xl font-bold mb-4 ">${highestBid || car.price}</h1>
+                        <div className="flex flex-wrap gap-5 justify-between items-center rubik mb-4">
+                            <h1 className="text-2xl font-bold">{car.model || ''}</h1>
+                            <h1 className="text-2xl font-bold">${highestBid || car.price}</h1>
                         </div>
                         <p className="text-gray-600">
                             <span className="font-semibold">Brand:</span>{' '}
@@ -129,6 +129,14 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                             <span className="font-semibold">Original Price:</span>{' '}
                             <span className='font-bold'>${car.price || ''}</span>
                         </p>
+                        <p className="text-gray-600">
+                            <span className="font-semibold">Bidding Status:</span>{' '}
+                            <span className='font-bold capitalize'>{car.bid_status || 'closed'}</span>
+                        </p>
+                        <p className="text-gray-600">
+                            <span className="font-semibold">InStock Status:</span>{' '}
+                            <span className='font-bold capitalize'>{car.car_status || ''}</span>
+                        </p>
                         <Separator className="my-5" />
                         {!user && (<div className="flex flex-wrap w-full justify-center items-center">
                             <Button
@@ -138,7 +146,7 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                                 Please log in first!
                             </Button>
                         </div>)}
-                        {bidable && (<div className="flex flex-wrap justify-between w-full gap-3">
+                        {bidable && (<div className="flex flex-wrap  w-full justify-center gap-3">
                             {/* Bid Button */}
                             <PlaceBidButton
                                 dialogOpen={dialogOpen}
@@ -149,44 +157,24 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                                 errors={errors}
                                 handleSubmit={handleSubmit}
                             />
-                            {/* View All Bids Button */}
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button className="md:max-w-[250px] w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold uppercase">
-                                        View All Bids
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[500px]">
-                                    <DialogHeader>
-                                        <DialogTitle>All Bids for {car.model}</DialogTitle>
-                                    </DialogHeader>
-                                    <div className="mt-4 overflow-y-auto max-h-[60vh]">
-                                        {currentBid.length > 0 ? (
-                                            <ul className="space-y-2">
-                                                {currentBid.map((bid) => (
-                                                    <li
-                                                        key={bid.id}
-                                                        className="flex justify-between items-center border p-2 rounded-md"
-                                                    >
-                                                        <div>
-                                                            <p className="font-semibold">{bid.user.name}</p>
-                                                            <p className="text-sm text-gray-500">
-                                                                {new Date(bid.created_at).toLocaleString()}
-                                                            </p>
-                                                        </div>
-                                                        <p className="font-semibold text-blue-600">${bid.amount}</p>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p className="text-gray-500">No bids available for this car.</p>
-                                        )}
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
                         </div>)}
+                        {!bidable ? (
+                            <div className="text-red-600 font-semibold text-center">You cannot bid this car anymore.</div>
+                        ) : null}
                         {isOwner && (
-                            <p className="text-red-400 font-semibold">You cannot bid you are the car owner.</p>
+                            <div className="flex flex-wrap justify-start items-center w-full gap-3">
+                                {car.bid_status === 'open' ? (
+                                    <Button className='bg-red-600 hover:bg-red-700 text-white w-auto'>
+                                        <Flag /> Close Bidding</Button>
+                                ) : (
+                                    <Button className='bg-blue-600 hover:bg-blue-700 text-white w-auto'>
+                                        <Goal />Re-Open Bidding</Button>
+                                )}
+                                <Button className='bg-gray-500 hover:bg-gray-600 text-white w-auto'>
+                                    <Pencil />
+                                    Edit
+                                </Button>
+                            </div>
                         )}
                         <Separator className="my-5" />
                         <div>
@@ -212,13 +200,14 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                     </div>
                 </div>
                 {/* Full Width Section: Car and User Details */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="col-span-2 bg-gray-50 mt-8 p-6 rounded-md shadow-md">
-                    <h2 className="text-xl font-bold mb-4">Additional Details</h2>
-                    <p className="text-lg font-semibold">{car.description}</p>
+                        <h2 className="text-xl font-bold rubik">Additional Details</h2>
+                        <p className="font-normal poppins">{car.description}</p>
                     <Separator className="my-5" />
                     {/* Car Details */}
                     <div className="mb-4">
-                        <h3 className="text-lg font-semibold">Car Specifications</h3>
+                            <h2 className="text-xl font-bold rubik">Car Specifications</h2>
                         <p className="text-gray-600">
                             <span className="font-semibold">Transmission:</span> {car.transmission || ''}
                         </p>
@@ -232,16 +221,42 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                     <Separator className='my-4' />
                     {/* User Information */}
                     <div>
-                        <h3 className="text-lg font-semibold">Owner Information</h3>
+                            <h2 className="text-xl font-bold rubik">Owner Information</h2>
                         <p className="text-gray-600">
                             <span className="font-semibold">Name:</span> {car.user.name || ''}
                         </p>
                         <p className="text-gray-600">
-                            <span className="font-semibold">Contact:</span> {car.user.contact || ''}
+                                <span className="font-semibold">Contact:</span> {car.user.profile.phone || ''}
                         </p>
                         <p className="text-gray-600">
                             <span className="font-semibold">Email:</span> {car.user.email || ''}
                         </p>
+                    </div>
+                </div>
+                    <div className="cols-pan-1 bg-gray-50 mt-8 rounded-md shadow-md p-6">
+                        <h2 className="text-xl font-bold rubik">All Bids for {car.model}</h2>
+                        <div className="overflow-y-auto my-4 max-h-[350px]">
+                            {currentBid.length > 0 ? (
+                                <ul className="space-y-2">
+                                    {currentBid.map((bid) => (
+                                        <li
+                                            key={bid.id}
+                                            className="flex flex-wrap justify-between items-center border p-2 rounded-md"
+                                        >
+                                            <div>
+                                                <p className="font-semibold">{bid.user.name}</p>
+                                                <p className="text-sm text-gray-500 font-semibold">
+                                                    {new Date(bid.created_at).toLocaleString()}
+                                                </p>
+                                            </div>
+                                            <p className="text-blue-600 rubik font-bold">${bid.bid_price}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="flex justify-between items-center border p-2 rounded-md text-gray-500">No bids available for this car.</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -90,11 +90,6 @@ export function DashboardSidebar({ user, admin, ...props }) {
                         url: new URL(route("bidding-history-dashboard")).pathname,
                         isActive: url === new URL(route("bidding-history-dashboard")).pathname
                     },
-                    {
-                        title: "Car Status",
-                        url: new URL(route("car-status-dashboard")).pathname,
-                        isActive: url === new URL(route("car-status-dashboard")).pathname
-                    },
                 ],
             },
         ],

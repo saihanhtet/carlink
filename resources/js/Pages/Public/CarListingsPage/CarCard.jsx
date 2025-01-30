@@ -1,6 +1,4 @@
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "@inertiajs/react";
 import {
     Dialog,
     DialogContent,
@@ -8,7 +6,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import InputLabel from "@/components/InputLabel";
+import { Link } from "@inertiajs/react";
+import { useState } from "react";
 
 
 const CarCard = ({ car, showEditButton, handleEditFunc = null, handleDelFunc = null }) => {
@@ -28,13 +27,13 @@ const CarCard = ({ car, showEditButton, handleEditFunc = null, handleDelFunc = n
                 <img
                     src={car.image}
                     alt={car.model}
-                    className="w-3/4 h-full object-contain"
+                    className="w-10/12 h-full object-contain object-center"
                 />
                 <div
-                    className={`absolute top-0 left-0 text-xs font-semibold px-2 py-1 capitalize ${car.status === "open" ? "bg-yellow-300" : "bg-red-600 text-white"
+                    className={`absolute top-0 left-0 text-xs font-semibold px-2 py-1 capitalize ${car.bid_status === "open" ? "bg-yellow-300" : "bg-red-600 text-white"
                         }`}
                 >
-                    Bidding {car.status}
+                    Bidding {car.bid_status}
                 </div>
             </div>
             <div className="p-4 font-mono flex-1">
@@ -45,9 +44,11 @@ const CarCard = ({ car, showEditButton, handleEditFunc = null, handleDelFunc = n
                     {car.mileage} mi
                 </p>
                 <p className="mt-2 text-lg font-semibold mb-2">${car.price}</p>
-                <span className="inline-block bg-green-300 text-xs font-semibold px-2 py-1 rounded">
-                    {car.price_category}
-                </span>
+                {car.price_category !== 'Not Available' ? (
+                    <span className="inline-block bg-green-300 text-xs font-semibold px-2 py-1 rounded">
+                        {car.price_category}
+                    </span>
+                ) : null}
                 <div className="mt-4">
                     <h3 className="text-sm font-semibold">{car.dealer_location}</h3>
                     <p className="text-sm mt-2">{car.location}</p>

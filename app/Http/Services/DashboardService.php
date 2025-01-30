@@ -91,7 +91,7 @@ class DashboardService
         $bids = Bid::with(['user', 'car'])
         ->whereHas('car', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        })->orderBy('created_at', 'desc')->get();
+        })->orderBy('created_at', 'desc');
         return $bids;
     }
 
