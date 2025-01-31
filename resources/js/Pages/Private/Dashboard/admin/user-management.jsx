@@ -168,7 +168,7 @@ const UserManagementDashboard = () => {
             )}
             <div className="flex flex-1 flex-col gap-4">
                 <ReUsableTable
-                    caption="My Car Bidding List"
+                    caption="All User List"
                     className={'max-h-[550px] h-auto'}
                     tableHeaders={tableHeaders}
                     tableData={filteredData}

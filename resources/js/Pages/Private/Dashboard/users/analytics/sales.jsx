@@ -23,6 +23,9 @@ const Analytics = () => {
     const [selectedFilter, setSelectedFilter] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
+    const [selectedCar, setSelectedCar] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const transformData = (data) =>
         data.map((car) => [
@@ -43,7 +46,7 @@ const Analytics = () => {
                     <div className="flex justify-center gap-2">
                         <Button
                             className="bg-yellow-400 hover:bg-yellow-500 text-black px-2 py-1 rounded w-[60px]"
-                            onClick={() => handleView(car.id)}
+                            onClick={() => handleView(car)}
                         >
                             View
                         </Button>
@@ -69,8 +72,9 @@ const Analytics = () => {
         setFilteredData(transformData(data));
     }, [data]);
 
-    const handleView = (id) => {
-        console.log(`View car with ID: ${id}`);
+    const handleView = (car) => {
+        setSelectedCar(car);
+        setIsModalOpen(true);
     };
 
     const handleSearch = (query) => {
@@ -162,6 +166,25 @@ const Analytics = () => {
                         })}
                     </PaginationContent>
                 </Pagination>
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                            <h2 className="text-xl font-semibold mb-4">Car Details</h2>
+                            {selectedCar && (
+                                <div>
+                                    <p><strong>Model:</strong> {selectedCar.model}</p>
+                                    <p><strong>Fuel Type:</strong> {selectedCar.fuel?.name ?? 'N/A'}</p>
+                                    <p><strong>Buyer:</strong> {selectedCar.transaction?.buyer?.name ?? 'N/A'}</p>
+                                    <p><strong>Transaction Date:</strong> {selectedCar.transaction?.transaction_date ?? 'N/A'}</p>
+                                    <p><strong>Final Price:</strong> {selectedCar.transaction?.final_price ? `$${selectedCar.transaction.final_price.toLocaleString()}` : 'N/A'}</p>
+                                </div>
+                            )}
+                            <div className="mt-4 flex justify-end">
+                                <Button onClick={() => setIsModalOpen(false)} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Close</Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
         </AuthenticatedLayout>
