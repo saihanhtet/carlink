@@ -126,6 +126,7 @@ class PublicPageController extends Controller
             'priceMax' => $request->input('priceMax'),
             'yearStart' => $request->input('yearStart'),
             'yearEnd' => $request->input('yearEnd'),
+            'bid' => $request->input('bid'),
         ];
 
         $this->applyFilters($query, $selectedFilters);
@@ -214,6 +215,10 @@ class PublicPageController extends Controller
         if (!empty($filters['yearEnd'])) {
             $query->where('registration_year', '<=', $filters['yearEnd']);
         }
+
+        if (!empty($filters['bid'])) {
+            $query->where('bid_status',  $filters['bid']);
+        }
     }
 
     /**
@@ -229,6 +234,7 @@ class PublicPageController extends Controller
             !empty($filters['priceMin']) ||
             !empty($filters['priceMax']) ||
             !empty($filters['yearStart']) ||
-            !empty($filters['yearEnd']);
+        !empty($filters['yearEnd']) ||
+        !empty($filters['bid']);
     }
 }

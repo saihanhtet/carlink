@@ -107,4 +107,14 @@ class SchemaDefinitions
         $table->date('transaction_date');
         $table->timestamps();
     }
+
+    public static function scheduleBooking(Blueprint $table)
+    {
+        $table->id();
+        $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
+        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+        $table->date('schedule_date');
+        $table->enum('status', ['pending', 'approved', 'denied'])->default('pending');
+        $table->timestamps();
+    }
 }

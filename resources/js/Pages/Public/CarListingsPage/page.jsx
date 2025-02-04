@@ -27,7 +27,8 @@ const CarListingWithSidebar = ({ canLogin, canRegister, isLoggedIn }) => {
             priceMin: selectedFilters.priceRange.min,
             priceMax: selectedFilters.priceRange.max,
             yearStart: selectedFilters.yearRange.start,
-            yearEnd: selectedFilters.yearRange.end
+            yearEnd: selectedFilters.yearRange.end,
+            bid: selectedFilters.bid
         };
 
         router.visit(route('car-listing-page'), {

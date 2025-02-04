@@ -34,6 +34,11 @@ export function DashboardSidebar({ user, admin, ...props }) {
                         url: new URL(route("car-management-dashboard")).pathname,
                         isActive: url === new URL(route("car-management-dashboard")).pathname
                     },
+                    {
+                        title: "Bookings Approve",
+                        url: new URL(route("booking-management-dashboard")).pathname,
+                        isActive: url === new URL(route("booking-management-dashboard")).pathname
+                    },
                 ],
             },
             {

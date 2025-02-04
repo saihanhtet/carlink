@@ -12,9 +12,10 @@ export default function Welcome({ canLogin, canRegister, isLoggedIn }) {
     return (
         <GuestLayout canLogin={canLogin} canRegister={canRegister} isLoggedIn={isLoggedIn}>
             <Head title="Welcome" />
-            {/* Search Section */}
+            {/* Hero Section */}
             <HeroSection />
 
+            {/* Search tool section */}
             <div className="container mx-auto py-10 space-y-8">
                 <Card className='rounded-md bg-gray-100 border border-slate-400 shadow-md'>
                     <CardHeader>
@@ -29,9 +30,9 @@ export default function Welcome({ canLogin, canRegister, isLoggedIn }) {
                 </Card>
             </div>
 
-
+            {/* How it is works section */}
             <HowItWorks />
-
+            {/* why choose us section */}
             <WhyChooseUs />
         </GuestLayout>
     );

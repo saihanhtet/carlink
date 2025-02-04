@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Http\Services\BidStatisticsService as ServicesBidStatisticsService;
 use App\Http\Services\DashboardService as ServicesDashboardService;
+use App\Models\Booking;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Engine;
@@ -131,6 +132,17 @@ class PrivatePageController extends Controller
         ];
         return $this->renderPage('Private/Dashboard/admin/car-management', $dashboardData);
     }
+
+    public function bookingManagementDashboard()
+    {
+        $bookings = Booking::with(['user', 'car'])->paginate(10);
+        $dashboardData  = [
+            'bookings' => $bookings
+        ];
+        return $this->renderPage('Private/Dashboard/admin/booking-management', $dashboardData);
+    }
+
+
 
     public function salesDashboard(Request $request)
     {

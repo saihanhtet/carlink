@@ -18,6 +18,39 @@ import { handleFormSubmit } from '@/lib/utils';
 import InputError from '@/components/InputError';
 import InputLabel from '@/components/InputLabel';
 
+const TestDriveButton = ({ testDriveDialog, setTestDriveDialog, data, car, setData, errors, handleSubmit }) => {
+    return (<Dialog open={testDriveDialog} onOpenChange={setTestDriveDialog}>
+        <DialogTrigger asChild>
+            <Button className="md:max-w-[250px] w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold uppercase">
+                Test Drive
+            </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+                <DialogTitle>Test Drive for {car.model}</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+                <InputLabel htmlFor="schedule_date" value="Schedule Drive Date" />
+                <TextInput
+                    id="schedule_date"
+                    type="date"
+                    value={data.schedule_date}
+                    onChange={(e) => setData('schedule_date', e.target.value)}
+                    placeholder="Enter Test Drive Date"
+                    className="focus:ring-0"
+                />
+                <InputError message={errors.drive_date} />
+                <Button
+                    className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white"
+                    onClick={handleSubmit}
+                >
+                    Place Booking
+                </Button>
+            </div>
+        </DialogContent>
+    </Dialog>)
+}
+
 const PlaceBidButton = ({ dialogOpen, setDialogOpen, data, car, setData, errors, handleSubmit }) => {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -57,6 +90,7 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
     const { car, currentBid, highestBid, lastBid, user, bidable, isOwner } = usePage().props;
     const [alert, setAlert] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [testDriveDialog, setTestDriveDialog] = useState(false);
 
     const {
         data,
@@ -69,6 +103,7 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
     } = useForm({
         car_id: car?.id || '',
         bid_price: '',
+        schedule_date: '',
     });
 
     const handleSubmit = () => {
@@ -84,6 +119,23 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
             },
             onSuccess: () => {
                 setDialogOpen(false); // Close the dialog
+            },
+        });
+    };
+
+    const handleScheduleSubmit = () => {
+        handleFormSubmit({
+            data,
+            model: 'booking',
+            actions: { post },
+            reset,
+            clearErrors,
+            setAlert: (newAlert) => {
+                setAlert(newAlert);
+                setTimeout(() => setAlert(null), 5000);
+            },
+            onSuccess: () => {
+                setDialogOpen(false);
             },
         });
     };
@@ -199,6 +251,15 @@ const CarDetailsPage = ({ canLogin, canRegister, isLoggedIn }) => {
                                 setData={setData}
                                 errors={errors}
                                 handleSubmit={handleSubmit}
+                            />
+                            <TestDriveButton
+                                dialogOpen={testDriveDialog}
+                                setDialogOpen={setTestDriveDialog}
+                                data={data}
+                                car={car}
+                                setData={setData}
+                                errors={errors}
+                                handleSubmit={handleScheduleSubmit}
                             />
                         </div>)}
                         {!bidable && user && !isOwner ? (

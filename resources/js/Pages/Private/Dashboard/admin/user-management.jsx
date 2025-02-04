@@ -3,7 +3,6 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { handleFormSubmit } from "@/lib/utils";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import { BadgePlus, Ban, ShieldCheck, ShieldOff } from "lucide-react";
 import React, { useState } from "react";
@@ -42,13 +41,7 @@ const UserManagementDashboard = () => {
                 });
                 if (onSuccess) onSuccess(response);
             },
-            onError: (errors) => {
-                setAlert({
-                    type: "destructive",
-                    message: "Failed to update the user. Please try again.",
-                });
-                if (onError) onError(errors);
-            },
+            onError: {},
         });
     };
 

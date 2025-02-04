@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // model
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\EngineController;
 use App\Http\Controllers\FuelController;
@@ -35,9 +36,11 @@ Route::middleware(['auth', 'verified', IsAdminMiddleware::class])->group(functio
     Route::get('/dashboard/admin/analytics', [PrivatePageController::class, 'dashboard'])->name('admin-dashboard');
     Route::get('/dashboard/admin/users-management', [PrivatePageController::class, 'userManagementDashboard'])->name('user-management-dashboard');
     Route::get('/dashboard/admin/cars-management', [PrivatePageController::class, 'carManagementDashboard'])->name('car-management-dashboard');
+    Route::get('/dashboard/admin/bookings-management', [PrivatePageController::class, 'bookingManagementDashboard'])->name('booking-management-dashboard');
 
     Route::put('/dashboard/admin/users-management', [ProfileController::class, 'updateStatus'])->name('user.update');
     Route::put('/dashboard/admin/users-management/appointment', [AppointmentController::class, 'updateAppointmentStatus'])->name('car.appointment.update');
+    Route::put('/dashboard/admin/bookings-management/appointment', [BookingController::class, 'updateAppointmentStatus'])->name('booking.appointment.update');
 });
 
 // Authenticated Routes
@@ -66,6 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/bids', [CarController::class, 'updateBidStatus'])->name('bid.update');
 
     // Resources Routes
+    Route::resource('/bookings', BookingController::class);
+    Route::post('/bookings', [BookingController::class, 'store'])->name('booking.store');
     Route::resource('/appointments', AppointmentController::class);
     Route::resource('/transactions', TransactionController::class);
 

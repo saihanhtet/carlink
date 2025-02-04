@@ -120,6 +120,11 @@ export function AppSidebar({
             options: fuels.map((fuel) => fuel.name),
         },
         {
+            title: "Bidding Status",
+            field: "bid",
+            options: ['open', 'close'],
+        },
+        {
             title: "Year",
             field: "yearRange",
             custom: true,
@@ -163,7 +168,7 @@ export function AppSidebar({
                                                     onChange={() => toggleOption(field, option)}
                                                     className="form-checkbox rounded text-blue-600 focus:ring focus:ring-blue-300"
                                                 />
-                                                <label htmlFor={`${field}-${option}`} className="">
+                                                <label htmlFor={`${field}-${option}`} className="capitalize">
                                                     {option}
                                                 </label>
                                             </div>
