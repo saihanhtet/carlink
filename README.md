@@ -1,6 +1,102 @@
-### Installation
+# UsedCarPortal
 
+UsedCarPortal is a Laravel-based web application designed for buying and selling used cars. This README provides instructions for setting up the project, running migrations, and installing necessary dependencies.
 
+## Prerequisites
+
+Before setting up the project, ensure you have the following installed:
+
+- PHP (>= 8.1)
+- Composer
+- Laravel (>= 10)
+- MySQL or PostgreSQL (for database)
+- Node.js & npm
+- Laravel Breeze & Sanctum (for authentication)
+
+## Installation Steps
+
+### 1. Clone the Repository
+```sh
+git clone https://github.com/your-repo/UsedCarPortal.git
+cd UsedCarPortal
+```
+
+### 2. Install PHP Dependencies
+```sh
+composer install
+```
+
+### 3. Create Environment File
+Copy the `.env.example` file and configure your environment settings:
+```sh
+cp .env.example .env
+```
+Update database credentials in `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=used_car_portal
+DB_USERNAME=root
+DB_PASSWORD=yourpassword
+```
+
+### 4. Generate Application Key
+```sh
+php artisan key:generate
+```
+
+### 5. Run Database Migrations
+```sh
+php artisan migrate --seed
+```
+(This will create tables and seed initial data.)
+
+### 6. Install NPM Dependencies
+```sh
+npm install
+```
+
+### 7. Build Frontend Assets
+```sh
+npm run dev  # For development
+npm run build  # For production
+```
+
+### 8. Serve the Application
+```sh
+php artisan serve
+```
+This will start the application at `http://127.0.0.1:8000`.
+
+## Authentication Setup
+Ensure Laravel Breeze and Sanctum are installed for authentication:
+```sh
+php artisan breeze:install
+php artisan migrate
+```
+
+## Running Tests
+To execute tests using Pest:
+```sh
+php artisan test
+```
+
+## Deployment
+For production deployment:
+```sh
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+npm run build
+```
+Ensure your server meets Laravel's deployment requirements and uses a queue system for background jobs.
+
+## Contributing
+Feel free to fork this repository and contribute by submitting pull requests.
+
+## License
+This project is licensed under the MIT License.
 ---
 #### Sample Data
 10 unique cars showcasing diverse specifications:

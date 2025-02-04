@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Appointment;
 use App\Models\Bid;
 use App\Models\User;
 use App\Models\Car;
@@ -17,6 +18,10 @@ test('user can view their bids', function () {
 test('user can place a bid', function () {
     $user = User::factory()->create();
     $car = Car::factory()->create();
+    Appointment::factory()->create([
+        'car_id' => $car->id,
+        'status' => 'approved',
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -27,12 +32,13 @@ test('user can place a bid', function () {
 
     $response->assertSessionHasNoErrors()
         ->assertRedirect("/car-details/{$car->id}");
-    // Check that the bid was stored in the database
+
     $this->assertDatabaseHas('bids', [
         'car_id' => $car->id,
         'bid_price' => 15000,
     ]);
 });
+
 
 
 test('bid price must be valid', function () {
