@@ -17,8 +17,8 @@ Before setting up the project, ensure you have the following installed:
 
 ### 1. Clone the Repository
 ```sh
-git clone https://github.com/your-repo/UsedCarPortal.git
-cd UsedCarPortal
+git clone https://github.com/saihanhtet/carlink.git
+cd carlink
 ```
 
 ### 2. Install PHP Dependencies
@@ -41,29 +41,43 @@ DB_USERNAME=root
 DB_PASSWORD=yourpassword
 ```
 
-### 4. Generate Application Key
+### 4. Configure Email Settings
+Update your `.env` file with the following mail configuration:
+```
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=yourusername
+MAIL_PASSWORD=yourpassword
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=no-reply@usedcarportal.com
+MAIL_FROM_NAME="UsedCarPortal"
+```
+Ensure you have set up an SMTP provider such as Mailtrap, SendGrid, or your preferred mail service.
+
+### 5. Generate Application Key
 ```sh
 php artisan key:generate
 ```
 
-### 5. Run Database Migrations
+### 6. Run Database Migrations
 ```sh
 php artisan migrate --seed
 ```
 (This will create tables and seed initial data.)
 
-### 6. Install NPM Dependencies
+### 7. Install NPM Dependencies
 ```sh
 npm install
 ```
 
-### 7. Build Frontend Assets
+### 8. Build Frontend Assets
 ```sh
 npm run dev  # For development
 npm run build  # For production
 ```
 
-### 8. Serve the Application
+### 9. Serve the Application
 ```sh
 php artisan serve
 ```
@@ -97,7 +111,7 @@ Feel free to fork this repository and contribute by submitting pull requests.
 
 ## License
 This project is licensed under the MIT License.
----
+
 #### Sample Data
 10 unique cars showcasing diverse specifications:
 
